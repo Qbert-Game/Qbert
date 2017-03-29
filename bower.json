@@ -1,0 +1,28 @@
+{
+  "name": "project-name",
+  "authors": [
+    "Tomasz Pierzchała"
+  ],
+  "description": "",
+  "main": "src/app/app.js",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-material": "^1.1.1",
+    "angular-ui-router": "^0.3.1",
+    "angular-resource": "^1.6.1",
+    "angular-cookies": "^1.6.2"
+  },
+  "resolutions": {
+    "angular": "1.6.1"
+  }
+}

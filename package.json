@@ -1,0 +1,33 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "babel-core": "^6.13.2",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-regenerator": "^6.11.4",
+    "babel-polyfill": "^6.13.0",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-regenerator-runtime": "^6.5.0",
+    "bower": "^1.8.0",
+    "css-loader": "^0.25.0",
+    "html-loader": "^0.4.4",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "q": "^1.4.1",
+    "rxjs": "^5.0.0-rc.4",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.13.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0",
+    "start": "./node_modules/.bin/webpack-dev-server --content-base src --inline --progress --colors --watch --config webpack_config/development.js --history-api-fallback true",
+    "dist": "./node_modules/.bin/webpack --progress --colors --config webpack_config/production.js"
+  },
+  "author": "Tomasz Pierzchała",
+  "license": "ISC"
+}

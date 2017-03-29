@@ -1,0 +1,16 @@
+node_modules
+src/assets/libs
+src/app.js
+src/vendor.js
+src/assets/scripts/commons.js
+src/index.html
+www
+
+### ApacheCordova ###
+# Apache Cordova generated files and directories
+bin/*
+!/plugins
+!/plugins/android.json
+!/plugins/fetch.json
+plugins/*
+platforms/*

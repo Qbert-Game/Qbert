@@ -1,0 +1,1 @@
+export default angular.module('app', ['ngMaterial', 'ui.router', 'ngResource']);

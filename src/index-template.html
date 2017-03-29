@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="app" lang="{{lang}}">
+
+<head meta-tags event-structured-data>
+    <title>App</title>
+
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    %INSERT-STYLES%
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,400,300,700,400italic,300italic,700italic,900" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body class="dev">
+    <div layout="row" layout-fill>
+        <md-content class="main-view-container" flex>
+            <ui-view></ui-view>
+        </md-content>
+    </div>
+
+    %INSERT-SCRIPTS%
+    <script src="assets/scripts/commons.js" type="text/javascript" charset="utf-8"></script>
+    <script src="vendor.js" type="text/javascript" charset="utf-8"></script>
+    <script src="app.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>
