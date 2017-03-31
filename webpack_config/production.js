@@ -3,6 +3,7 @@ var webpack = require('webpack');
 var GenerateIndex = require('../web_modules/generateIndex');
 var InsertScripts = require('../web_modules/insertScripts');
 var CopyAssets = require('../web_modules/copyAssets');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var global = require("./../webpack.config.js");
 
@@ -20,6 +21,9 @@ var local = {
             styles: global.styles
         }),
         new CopyAssets({scripts: global.scripts, styles: global.styles}),
+        new CopyWebpackPlugin([{
+            from: './src/assets/images', to: '../www/assets/images'
+        }]),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'commons',
             filename: '../www/assets/scripts/commons.js'

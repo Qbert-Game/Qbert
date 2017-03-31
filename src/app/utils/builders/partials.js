@@ -12,8 +12,7 @@ export default function buildPartials(name, component) {
 
     if (component.partials) {
         for (var componentName in component.partials) {
-            var component = component.partials[componentName];
-            buildPartials(componentName, component);
+            buildPartials(componentName, component.partials[componentName]);
         }
     }
 };

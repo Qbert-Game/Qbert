@@ -17,7 +17,8 @@ module.exports.scripts = [
 ];
 
 module.exports.styles = [
-  'assets/libs/angular-material/angular-material.min.css'
+  'assets/libs/angular-material/angular-material.min.css',
+  'assets/libs/animate.css/animate.min.css'
 ];
 
 module.exports.config = {
@@ -43,12 +44,12 @@ module.exports.config = {
       },
       {
         test: /\.html$/,
-        loader: 'html'
+        loader: 'html?attrs=false'
       }
     ],
   },
   resolve: {
-    modulesDirectories: ['node_modules', './src/app/shared', './src/assets/libs'],
+    modulesDirectories: ['node_modules', './src/app/shared', './src/assets/libs', './src/assets'],
     root: [
       path.resolve('./src/app')
     ]
