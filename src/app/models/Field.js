@@ -15,14 +15,18 @@ export default class Field {
     }
 
     addVisitor({ type, id }) {
+        this.visitors.push({ type, id });
 
+        if (type === 'qbert') {
+            this.newQbertVisit();
+        }
     }
 
     removeVisitor({ id }) {
-
+        this.visitors = this.visitors.filter((x) => x.id !== id);
     }
 
-    changeColor() {
+    newQbertVisit() {
         if (this.qbertVisits === this.stepsToTarget) {
             return;
         }

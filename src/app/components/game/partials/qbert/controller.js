@@ -1,9 +1,12 @@
-export default function ($scope, $timeout, Timer, GameBoard) {
+export default function ($scope, $rootScope, $timeout, Timer, GameBoard) {
     $scope.gameboard = GameBoard.get();
     $scope.position = {
-        row: 0,
-        column: 0
+        row: 4,
+        column: 3
     }
+
+    var id = 'qbert';
+    var type = 'qbert';
 
     var updateViewPosition = () => {
         var { row, column } = $scope.position;
@@ -11,6 +14,8 @@ export default function ($scope, $timeout, Timer, GameBoard) {
         $scope.top = position.top;
         $scope.left = position.left;
     }
+
+    GameBoard.registerCharacter({ id, type, position: $scope.position })
 
     $timeout(() => {
        updateViewPosition();
@@ -21,8 +26,18 @@ export default function ($scope, $timeout, Timer, GameBoard) {
             return;
         }
 
-        $scope.position.row++;
-        $scope.position.column++;
+        var getRandomDirection = () => { 
+            var keys = Object.keys($rootScope.directions);
+            var random = Math.floor(Math.random() * 4);
+            var key = keys[random];
+
+            return $rootScope.directions[key];
+        }
+
+        var direction = getRandomDirection();
+
+        GameBoard.move({ id, direction });
+
         updateViewPosition();
     });
 }
