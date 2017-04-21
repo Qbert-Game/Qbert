@@ -1,0 +1,27 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="60" height="60" viewBox="0 0 512 606" ng-click="field.changeColor()">
+
+    <style>
+        #top {
+            fill: rgb(187, 68, 34);
+        }
+        #left {
+            fill: white;
+        }
+        #right {
+            fill: black;
+        }
+        polygon {
+            stroke: black;
+            stroke-width: 1.25%;
+            stroke-linejoin: round;
+        }
+    </style>
+
+    <polygon points="256,343 47,195 256,47 465,195" fill="{{field.currentColor}}" />
+    <polygon points="256,343 465,195 465,411 256,559" id="right" />
+    <polygon points="256,343 256,559 47,411 47,195" id="left" />
+
+</svg>

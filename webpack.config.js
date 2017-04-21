@@ -6,6 +6,7 @@ var InsertScripts = require('./web_modules/insertScripts');
 var CopyAssets = require('./web_modules/copyAssets');
 
 module.exports.scripts = [
+  'assets/libs/jquery/dist/jquery.min.js',
   'assets/libs/angular/angular.min.js',
   'assets/libs/angular-cookies/angular-cookies.min.js',
   'assets/libs/angular-resource/angular-resource.min.js',
@@ -22,11 +23,11 @@ module.exports.styles = [
 ];
 
 module.exports.config = {
-  cache: false,
+  cache: true,
   target: 'web',
   entry: {
     app: './src/app/app.js',
-    vendor: ['babel-regenerator-runtime', 'q']
+    vendor: ['babel-regenerator-runtime', 'q', 'rxjs']
   },
   module: {
     loaders: [

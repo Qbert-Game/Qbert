@@ -1,13 +1,12 @@
+import _ from 'lodash';
+
 export default function buildPartials(name, component) {
-    var controller = component.controller || function () { };
-    var template = component.template;
+    component.controller = component.controller || function () { };
+
+    var directive = _.extend(component, { restrict: 'E' });
 
     App.directive(name, () => {
-        return {
-            restrict: 'E',
-            controller,
-            template
-        }
+        return directive;
     });
 
     if (component.partials) {
