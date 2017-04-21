@@ -2,7 +2,6 @@
     <div ng-repeat="row in gameBoard" layout="row" layout-align="center center">
         <div ng-repeat="field in row track by $index" class="field" ng-class="{ 'top' : $parent.$index === 0 }">
             <field id="{{field.id}}" field="field" style="height: 60px; width: 60px; display: block;"></field>
-            <!--<img id="{{qbert}}" class="qbert animated bounce" src="assets/images/qbert.png" height="35" ng-if="$parent.$index === 0">-->
         </div>
     </div>
 

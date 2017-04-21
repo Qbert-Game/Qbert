@@ -6,6 +6,6 @@ export default function ($scope, Timer, GameBoard) {
     $scope.qbert = GameBoard.qbert;
 
     Timer.subscribe(() => {
-        $scope.possibleMoves = GameBoard.getPossibleMoves($scope.qbert.id);
+        $scope.possibleMoves = GameBoard.getPossibleMoves('qbert');
     });
 }
