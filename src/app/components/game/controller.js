@@ -1,13 +1,11 @@
-export default function ($scope, Timer) {
+export default function ($scope, Timer, GameBoard) {
     Timer.start();
 
-    $scope.grid = [
-        [0],
-        [0, 0],
-        [0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-    ];
+    $scope.gameBoard = GameBoard.get();
+
+    $scope.qbert = GameBoard.qbert;
+
+    Timer.subscribe(() => {
+        $scope.possibleMoves = GameBoard.getPossibleMoves($scope.qbert.id);
+    });
 }

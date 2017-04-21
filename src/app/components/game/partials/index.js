@@ -1,2 +1,3 @@
 import field from './field';
-export default { field };
+import keyboard from './keyboard';
+export default { field,keyboard };
