@@ -6,6 +6,7 @@ var InsertScripts = require('./web_modules/insertScripts');
 var CopyAssets = require('./web_modules/copyAssets');
 
 module.exports.scripts = [
+  'assets/libs/jquery/dist/jquery.min.js',
   'assets/libs/angular/angular.min.js',
   'assets/libs/angular-cookies/angular-cookies.min.js',
   'assets/libs/angular-resource/angular-resource.min.js',

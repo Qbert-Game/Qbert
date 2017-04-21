@@ -1,3 +1,4 @@
 import field from './field';
 import keyboard from './keyboard';
-export default { field,keyboard };
+import qbert from './qbert';
+export default { field,keyboard,qbert };

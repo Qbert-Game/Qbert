@@ -35,6 +35,10 @@ export default class Field {
     }
 
     getPosition() {
-        return document.getElementById(this.id);
+        var position = $(`#${this.id}`).offset();
+        position.top -= 10;
+        position.left += 20;
+
+        return position;
     }
 }
