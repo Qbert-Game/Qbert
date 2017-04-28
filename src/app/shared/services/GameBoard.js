@@ -34,25 +34,36 @@ export default function ($rootScope) {
         return map[direction];
     }
 
+    var positionAfterMove = (startPos, direction) => {
+        var move = directionToCoordinates(direction);
+        return {
+            row: startPos.row + move.row,
+            column: startPos.column + move.column
+        }
+    }
+
     return {
         get: () => gameBoard,
 
         getPossibleMoves: (id) => {
-            var directions = $rootScope.directions;
+            var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
+            var directions = [upRight, upLeft, downRight, downLeft]
             var character = getCharacterById(id);
             var moves = [];
 
-            for(var dir of directions){
-                var targetPos = MonsterUtils.getPosAfterMove(character.position, dir);
-                var targetField = gameBoard[targetPos.row][targetPos.column]
-                if(targetField != undefined)
-                    moves.push({ direction: dir, target: targetField});
+            for (var dir of directions) {
+                var targetPos = positionAfterMove(character.position, dir);
+                if(gameBoard[targetPos.row] && gameBoard[targetPos.row][targetPos.column]){
+                    var targetField = gameBoard[targetPos.row][targetPos.column];
+                    moves.push({ direction: dir, target: targetField });
+                }
+        
             }
 
 
-            if(character.type != "qbert")
-                moves = moves.filter( m => m.target.visitors.length == 0)
-
+            if (character.type != "qbert")
+                moves = moves.filter(m => m.target.visitors.length == 0)
+            
             return moves.map(m => m.direction);
         },
 

@@ -1,4 +1,4 @@
-export default function () {
+export default function (GameBoard, $rootScope) {
     return {
         getPossibleMoves,
         getPosAfterMove,
@@ -7,35 +7,38 @@ export default function () {
         randomMove
     }
 
-    function getPossibleMoves(monster) {
+    function getPossibleMonsterMoves(monsterId) {
+        var monster = GameBoard.getCharacterById(monsterId);
         var monsterMoves = monster.moves;
-        var possibleMoves = []; //Gameboard.getPossibleMoves(monster.id);
+        var possibleMoves = Gameboard.getPossibleMoves(monster.id);
         return monsterMoves.filter(move => possibleMoves.includes(move));
     }
 
     function getPosAfterMove(startPos, move) {
+        var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
         switch (move) {
-            case "UP RIGHT": return { row: startPos.row - 1, col: startPos.col };
-            case "UP LEFT": return { row: startPos.row - 1, col: startPos.col - 1 };
-            case "DOWN RIGHT": return { row: startPos.row + 1, col: startPos.col + 1 };
-            case "DOWN LEFT": return { row: startPos.row + 1, col: startPos.col };
+            case upRight: return { row: startPos.row - 1, column: startPos.column };
+            case upLeft: return { row: startPos.row - 1, column: startPos.column - 1 };
+            case downRight: return { row: startPos.row + 1, column: startPos.column + 1 };
+            case downLeft: return { row: startPos.row + 1, column: startPos.column };
         }
     }
 
     function getPosAfterMovingCloser(fromPos, toPos) {
-        var colDiff = fromPos.col - toPos.col;
+        var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
+        var colDiff = fromPos.column - toPos.column;
         var rowDiff = fromPos.row - toPos.row;
 
         if (rowDiff > 0)
-            var move = (colDiff <= 1 ? "UP RIGHT" : "UP LEFT");
+            var move = (colDiff <= 1 ? upRight : upLeft);
         else
-            var move = (colDiff <= -1 ? "DOWN RIGHT" : "DOWN LEFT");
+            var move = (colDiff <= -1 ? downRight : downLeft);
 
         return getPosAfterMove(fromPos, move);
     }
 
     function distanceBetween(pos1, pos2) {
-        var colDiff = pos1.col - pos2.col;
+        var colDiff = pos1.column - pos2.column;
         var rowDiff = pos1.row - pos2.row;
 
         if (colDiff == 0 || colDiff == rowDiff)

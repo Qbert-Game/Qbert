@@ -1,13 +1,15 @@
-export default async function ($scope, MonsterUtils) {
-    $scope.id = "0"
-    $scope.moves = ["DOWN RIGHT", "DOWN LEFT"];
+export default async function ($scope, $rootScope, Gameboard, MonsterUtils) {
+    $scope.id = "0";
+    $scope.type = "sam";
+    $scopee.positon = null;
+    $scope.moves = [$rootScope.directions.downRight, $rootScope.directions.downLeft];
 
     function move() {
-        var possibleMoves = MonsterUtils.getPossibleMoves($scope)
+        var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope)
 
         if (possibleMoves.length > 0) {
             var move = MonsterUtils.random(possibleMoves);
-            //Gameboard.move(move)
+            Gameboard.move(move)
         }
     }
 

@@ -1,16 +1,18 @@
-export default async function ($scope, MonsterUtils) {
-    $scope.id = "0"
+export default async function ($scope, $rootScope, MonsterUtils, Gameboard) {
+    $scope.id = "0";
+    $scope.type = "coily";
+    $scope.position = null;
     $scope.isTransformed = false;
     $scope.moves = getMoves();
 
     function move() {
-        var possibleMoves = MonsterUtils.getPossibleMoves($scope);
-        var myPos = { row: 0, col: 0 }; // Gameboard.getMonsterPos($scope.id);
-        var qbertPos = { row: 0, col: 0 }; // Gameboard.getQbertPos();
+        var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope);
+        var myPos = $scope.position;
+        var qbertPos = Gameboard.getQbertPos();
 
         if (possibleMoves.length > 0) {
             getBestMove(myPos, qbertPos, possibleMoves);
-            //Gameboard.move(move);
+            Gameboard.move($scope.id, move);
         }
     }
 
@@ -37,9 +39,10 @@ export default async function ($scope, MonsterUtils) {
     }
 
     function getMoves() {
+        var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
         if ($scope.isTransformed)
-            return ["UP RIGHT", "UP LEFT", "DOWN RIGHT", "DOWN LEFT"];
+            return [upRight, upLeft, downRight, downLeft];
         else
-            return ["DOWN RIGHT", "DOWN LEFT"]
+            return [downRight, downLeft];
     }
 }
