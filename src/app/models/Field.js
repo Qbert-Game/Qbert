@@ -15,23 +15,29 @@ export default class Field {
     }
 
     addVisitor({ type, id }) {
+        this.visitors.push({ type, id });
 
+        if (type === 'qbert') {
+            this.newQbertVisit();
+        }
     }
 
     removeVisitor({ id }) {
-
+        this.visitors = this.visitors.filter((x) => x.id !== id);
     }
 
-    changeColor() {
+    newQbertVisit() {
         if (this.qbertVisits === this.stepsToTarget) {
             return;
         }
 
-        this.currentColor = this.colors[++this.qbertVisits];
+        setTimeout(() => {
+            this.currentColor = this.colors[++this.qbertVisits];
 
-        if (this.qbertVisits === this.stepsToTarget) {
-            console.log('target Reached');
-        }
+            if (this.qbertVisits === this.stepsToTarget) {
+                console.log('target Reached');
+            }
+        }, 100);
     }
 
     getPosition() {
