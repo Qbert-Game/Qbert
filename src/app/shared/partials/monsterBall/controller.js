@@ -10,4 +10,8 @@ export default async function ($scope, MonsterUtils) {
             //Gameboard.move(move)
         }
     }
+
+    function getMoves(){
+        return $scope.moves;
+    }
 }

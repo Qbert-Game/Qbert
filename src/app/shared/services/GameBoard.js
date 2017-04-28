@@ -24,15 +24,20 @@ export default function ($rootScope) {
 
         getPossibleMoves: (id) => {
             var directions = $rootScope.directions;
+            var character = getCharacterById(id);
+            var moves = [];
 
-            var possibleMoves = [
-                // directions.upRight,
-                // directions.upLeft,
-                directions.downRight,
-                directions.downLeft,
-            ];
+            for(var dir of directions){
+                var targetPos = MonsterUtils.getPosAfterMove(character.position, dir);
+                var targetField = gameBoard[targetPos.row][targetPos.column]
+                if(targetField != undefined)
+                    moves.push({ direction: dir, target: targetField});
+            }
 
-            return possibleMoves;
+            if(character.type != "qbert")
+                moves = moves.filter( m => m.target.visitors.length == 0)
+
+            return moves.map(m => m.direction);
         },
         move: ({ id, direction }) => {
             console.log('move', id, direction);
