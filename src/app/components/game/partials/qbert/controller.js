@@ -2,8 +2,10 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard) {
     $scope.gameboard = GameBoard.get();
     $scope.position = {
         row: 4,
-        column: 3
+        column: 2
     }
+
+    $scope.isJumping = false;
 
     var id = 'qbert';
     var type = 'qbert';
@@ -11,8 +13,13 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard) {
     var updateViewPosition = () => {
         var { row, column } = $scope.position;
         var position = $scope.gameboard[row][column].getPosition();
+
+        $scope.isJumping = true;
+
         $scope.top = position.top;
         $scope.left = position.left;
+
+        // $timeout(() => { $scope.isJumping = false }, 5000)
     }
 
     GameBoard.registerCharacter({ id, type, position: $scope.position })
@@ -35,8 +42,7 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard) {
         }
 
         var direction = getRandomDirection();
-
-        GameBoard.move({ id, direction });
+        // GameBoard.move({ id, direction });
 
         updateViewPosition();
     });

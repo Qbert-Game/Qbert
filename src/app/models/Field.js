@@ -31,11 +31,13 @@ export default class Field {
             return;
         }
 
-        this.currentColor = this.colors[++this.qbertVisits];
+        setTimeout(() => {
+            this.currentColor = this.colors[++this.qbertVisits];
 
-        if (this.qbertVisits === this.stepsToTarget) {
-            console.log('target Reached');
-        }
+            if (this.qbertVisits === this.stepsToTarget) {
+                console.log('target Reached');
+            }
+        }, 100);
     }
 
     getPosition() {

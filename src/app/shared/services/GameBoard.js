@@ -18,7 +18,6 @@ export default function ($rootScope) {
     };
 
     var gameBoard = generateGameBoard();
-
     var characters = [];
 
     var getCharacterById = (id) => characters.filter(x => x.id === id)[0];
@@ -42,8 +41,8 @@ export default function ($rootScope) {
             var directions = $rootScope.directions;
 
             var possibleMoves = [
-                // directions.upRight,
-                // directions.upLeft,
+                directions.upRight,
+                directions.upLeft,
                 directions.downRight,
                 directions.downLeft,
             ];
