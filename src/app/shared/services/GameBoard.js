@@ -1,14 +1,33 @@
 import Field from 'models/Field';
 
-export default function ($rootScope) {
-    var generateGameBoard = () => {
+export default function ($rootScope, Timer, Observable) {
+    var observable = new Observable();
+    var gameBoard, characters, movesStack;
+    var reached = 0, fieldsNumber = 28;
+
+    var actions = {
+        animationStart: 'ANIMATION_START',
+        animationEnd: 'ANIMATION_END',
+        levelCompleted: 'LEVEL_COMPLETED'
+    };
+
+    var generateGameBoard = (stepsToTarget) => {
         var gameBoard = [];
 
         for (let i = 0; i < 7; i++) {
             var row = [];
 
             for (let j = 0; j < i + 1; j++) {
-                row.push(new Field({ row: i, column: j }));
+                let field = new Field({ row: i, column: j, stepsToTarget });
+                field.onTargetReached(() => {
+                    reached++;
+
+                    if (reached === fieldsNumber) {
+                        observable.next({ action: actions.levelCompleted });
+                    }
+                });
+
+                row.push(field);
             }
 
             gameBoard.push(row);
@@ -16,9 +35,6 @@ export default function ($rootScope) {
 
         return gameBoard;
     };
-
-    var gameBoard = generateGameBoard();
-    var characters = [];
 
     var getCharacterById = (id) => characters.filter(x => x.id === id)[0];
 
@@ -42,39 +58,12 @@ export default function ($rootScope) {
         }
     }
 
-    return {
-        get: () => gameBoard,
+    var makeMoves = () => {
+        while (movesStack.length) {
+            var { id, direction } = movesStack.pop();
 
-        getPossibleMoves: (id) => {
-            var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
-            var directions = [upRight, upLeft, downRight, downLeft]
-            var character = getCharacterById(id);
-            var moves = [];
+            observable.next({ action: actions.animationStart, payload: { id, direction } });
 
-            for (var dir of directions) {
-                var targetPos = positionAfterMove(character.position, dir);
-                if(gameBoard[targetPos.row] && gameBoard[targetPos.row][targetPos.column]){
-                    var targetField = gameBoard[targetPos.row][targetPos.column];
-                    moves.push({ direction: dir, target: targetField });
-                }
-        
-            }
-
-
-            if (character.type != "qbert")
-                moves = moves.filter(m => m.target.visitors.length == 0)
-            
-            return moves.map(m => m.direction);
-        },
-
-        registerCharacter: ({ id, type, position }) => {
-            var character = { id, type, position };
-            characters.push(character);
-            console.log(characters);
-            console.log(getCharacterById(id))
-        },
-
-        move: ({ id, direction }) => {
             var character = getCharacterById(id);
             var coordinatesToAdd = directionToCoordinates(direction);
 
@@ -89,7 +78,55 @@ export default function ($rootScope) {
             var field = gameBoard[row][column];
             field.addVisitor(character);
 
-            return { row, column };
+            observable.next({ action: actions.animationEnd, payload: { id, direction } });
         }
-    }
+    };
+
+    Timer.subscribe(makeMoves);
+
+    /*
+    ** Public interface
+    */
+    observable.start = (stepsToTarget) => {
+        gameBoard = generateGameBoard(stepsToTarget);
+        characters = [];
+        movesStack = [];
+    };
+
+    observable.actions = actions;
+
+    observable.get = () => gameBoard;
+
+    observable.getPossibleMoves = (id) => {
+        var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
+        var directions = [upRight, upLeft, downRight, downLeft]
+        var character = getCharacterById(id);
+        var moves = [];
+
+        for (var dir of directions) {
+            var targetPos = positionAfterMove(character.position, dir);
+            if (gameBoard[targetPos.row] && gameBoard[targetPos.row][targetPos.column]) {
+                var targetField = gameBoard[targetPos.row][targetPos.column];
+                moves.push({ direction: dir, target: targetField });
+            }
+
+        }
+
+
+        if (character.type != "qbert")
+            moves = moves.filter(m => m.target.visitors.length == 0)
+
+        return moves.map(m => m.direction);
+    };
+
+    observable.registerCharacter = ({ id, type, position }) => {
+        var character = { id, type, position };
+        characters.push(character);
+    };
+
+    observable.move = ({ id, direction }) => {
+        movesStack.push({ id, direction });
+    };
+
+    return observable;
 }

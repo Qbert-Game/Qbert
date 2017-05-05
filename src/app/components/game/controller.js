@@ -1,4 +1,5 @@
-export default function ($scope, Timer, GameBoard) {
+export default function ($scope, Timer, GameBoard, Game, $timeout) {
+    Game.startLevel(1);
     Timer.start();
 
     $scope.gameBoard = GameBoard.get();

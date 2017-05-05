@@ -1,6 +1,3 @@
-var netAddress = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
-
-module.exports = {
-    netAddress,
-    endpoint: 'endpoint'
+export default {
+    fieldColors: ["blue", "red", "yellow", "green"]
 }
