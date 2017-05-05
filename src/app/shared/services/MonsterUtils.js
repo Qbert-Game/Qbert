@@ -1,16 +1,9 @@
 export default function (GameBoard, $rootScope) {
-    return {
-        getPossibleMoves,
-        getPosAfterMove,
-        getPosAfterMovingCloser,
-        distanceBetween,
-        randomMove
-    }
 
     function getPossibleMonsterMoves(monsterId) {
-        var monster = GameBoard.getCharacterById(monsterId);
+        var monster = GameBoard.get().getCharacterById(monsterId);
         var monsterMoves = monster.moves;
-        var possibleMoves = Gameboard.getPossibleMoves(monster.id);
+        var possibleMoves = Gameboard.get().getPossibleMoves(monster.id);
         return monsterMoves.filter(move => possibleMoves.includes(move));
     }
 
@@ -56,7 +49,7 @@ export default function (GameBoard, $rootScope) {
     }
 
     return {
-        getPossibleMoves: getPossibleMoves,
+        getPossibleMonsterMoves: getPossibleMonsterMoves,
         getPosAfterMove: getPosAfterMove,
         getPosAfterMovingCloser: getPosAfterMovingCloser,
         distanceBetween: distanceBetween,

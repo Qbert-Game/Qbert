@@ -22,28 +22,30 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard) {
         // $timeout(() => { $scope.isJumping = false }, 5000)
     }
 
+debugger
     GameBoard.registerCharacter({ id, type, position: $scope.position })
 
     $timeout(() => {
+        console.log($scope.position)
        updateViewPosition();
     }, 0);
 
-    Timer.subscribe(() => {
-        if ($scope.position.row >= $scope.gameboard.length - 1) {
-            return;
-        }
+    // Timer.subscribe(() => {
+    //     if ($scope.position.row >= $scope.gameboard.length - 1) {
+    //         return;
+    //     }
 
-        var getRandomDirection = () => { 
-            var keys = Object.keys($rootScope.directions);
-            var random = Math.floor(Math.random() * 4);
-            var key = keys[random];
+    //     var getRandomDirection = () => { 
+    //         var keys = Object.keys($rootScope.directions);
+    //         var random = Math.floor(Math.random() * 4);
+    //         var key = keys[random];
 
-            return $rootScope.directions[key];
-        }
+    //         return $rootScope.directions[key];
+    //     }
 
-        var direction = getRandomDirection();
-        // GameBoard.move({ id, direction });
+    //     var direction = getRandomDirection();
+    //     // GameBoard.move({ id, direction });
 
-        updateViewPosition();
-    });
+    //     updateViewPosition();
+    // });
 }

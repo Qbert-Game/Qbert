@@ -6,13 +6,13 @@ export default async function ($scope, $rootScope, MonsterUtils, Gameboard) {
     $scope.moves = getMoves();
 
     function move() {
-        var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope);
+        var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope.id);
         var myPos = $scope.position;
         var qbertPos = Gameboard.getQbertPos();
 
         if (possibleMoves.length > 0) {
             getBestMove(myPos, qbertPos, possibleMoves);
-            Gameboard.move($scope.id, move);
+            Gameboard.move({id: $scope.id, direction: move});
         }
     }
 

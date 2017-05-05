@@ -70,6 +70,8 @@ export default function ($rootScope) {
         registerCharacter: ({ id, type, position }) => {
             var character = { id, type, position };
             characters.push(character);
+            console.log(characters);
+            console.log(getCharacterById(id))
         },
 
         move: ({ id, direction }) => {
