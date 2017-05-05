@@ -1,11 +1,11 @@
 import uuid from 'utils/uuid';
 
 export default class Field {
-    constructor({ row, column }) {
+    constructor({ row, column, stepsToTarget }) {
         this.id = uuid();
 
-        this.colors = ["blue", "red", "yellow", "green"];
-        this.stepsToTarget = 2;
+        this.colors = App.defaults.fieldColors;
+        this.stepsToTarget = stepsToTarget;
         this.visitors = [];
 
         this.qbertVisits = 0;
@@ -35,7 +35,7 @@ export default class Field {
             this.currentColor = this.colors[++this.qbertVisits];
 
             if (this.qbertVisits === this.stepsToTarget) {
-                console.log('target Reached');
+                this.onTargetReachedCallback();
             }
         }, 100);
     }
@@ -46,5 +46,9 @@ export default class Field {
         position.left += 20;
 
         return position;
+    }
+
+    onTargetReached(callback) {
+        this.onTargetReachedCallback = callback;
     }
 }

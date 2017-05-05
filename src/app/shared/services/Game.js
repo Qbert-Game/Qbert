@@ -1,17 +1,22 @@
 export default function (Observable, GameBoard) {
     var observable = new Observable();
     
-    var state = {
-        gameBoard,
-        characters,
-        points
+    var actions = {
+        levelStarted: 'LEVEL_STARTED'
     };
 
-    var start = () => {
+    GameBoard.subscribe((data) => {
+        var { action } = data;
 
+        if (action === GameBoard.actions.levelCompleted) {
+            alert('Level completed!');
+        }
+    });
+
+    observable.startLevel = (level) => {
+        GameBoard.start(level);
+        observable.next({ action: actions.levelStarted, payload: { level } });
     }
 
-    var changeState = () => {
-        observable.next()
-    }
+    return observable;
 }
