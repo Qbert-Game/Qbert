@@ -1,2 +1,28 @@
-Level {{level}}
-<div style="width: 50px; height: 50px;" ng-style="{ 'background' : color }"></div>
+<div class="info" layout="row" style="padding-right: 8px;">
+    <div>
+        <div layout="column" layout-align="center center" layout-margin>
+            <div>Target:</div>
+            <!--<div style="width: 30px; height: 30px;" ng-style="{ 'background' : color }"></div>-->
+            <div class="field-container">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="60" height="60" viewBox="0 0 512 606">
+                    <polygon points="256,343 47,195 256,47 465,195" fill="{{color}}" />
+                    <polygon points="256,343 465,195 465,411 256,559" id="right" />
+                    <polygon points="256,343 256,559 47,411 47,195" id="left" />
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div flex></div>
+    <div layout="column" layout-align="start center" layout-margin>
+        <div layout="row" style="width: 100%;">
+            <div>Level:</div>
+            <div flex></div>
+            <div>{{level}}</div>
+        </div>
+        <div layout="row" style="width: 100%;">
+            <div>Points:</div>
+            <div flex></div>
+            <div>{{points}}</div>
+        </div>
+    </div>
+</div>

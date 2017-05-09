@@ -1,4 +1,4 @@
-<div class="keyboard">
+<div class="keyboard" ng-class="{ 'lock' : jumpBlock }">
     <div layout="row">
         <div class="key left" layout="row" layout-align="center center" ng-show="possibleMoves.indexOf(directions.upLeft) !== -1"
             ng-click="move(directions.upLeft)">

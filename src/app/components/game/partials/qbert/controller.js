@@ -1,44 +1,53 @@
-export default function ($scope, $rootScope, $timeout, Timer, GameBoard) {
-    $scope.gameboard = GameBoard.get();
-    $scope.position = {
-        row: 4,
-        column: 2
-    }
-
-    $scope.isJumping = false;
-
-    var id = 'qbert';
-    var type = 'qbert';
-
+export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
     var updateViewPosition = () => {
         var { row, column } = $scope.position;
-        var position = $scope.gameboard[row][column].getPosition();
 
-        $scope.top = position.top;
-        $scope.left = position.left;
+        $scope.gameboard[row][column].getPosition().then((position) => {
+            $scope.top = position.top;
+            $scope.left = position.left;
+        });
     }
 
-    GameBoard.registerCharacter({ id, type, position: $scope.position })
+    var init = () => {
+        $scope.gameboard = GameBoard.get();
+        $scope.position = {
+            row: 0,
+            column: 0
+        }
 
-    $timeout(() => {
-        updateViewPosition();
-    }, 0);
+        $scope.isJumping = false;
+
+        var id = 'qbert';
+        var type = 'qbert';
+
+        GameBoard.registerCharacter({ id, type, position: $scope.position })
+    };
 
     GameBoard.subscribe((data) => {
         var { action, payload } = data;
 
-        if (payload.id !== id) {
-            return;
-        }
-
         switch (action) {
-            case GameBoard.actions.animationStart:
+            case GameBoard.actions.animationStart: {
                 $scope.isJumping = true;
                 break;
-            case GameBoard.actions.animationEnd:
+            }
+            case GameBoard.actions.animationEnd: {
                 updateViewPosition();
                 $timeout(() => $scope.isJumping = false, 500);
                 break;
+            }
+        }
+    });
+
+    Game.subscribe((data) => {
+        var { action } = data;
+
+        switch (action) {
+            case Game.actions.levelStarted: {
+                init();
+                updateViewPosition();
+                break;
+            }
         }
     });
 }
