@@ -5,23 +5,20 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, MonsterU
     $scope.position = {row: 1, column: 1};
     $scope.moves = [$rootScope.directions.downRight, $rootScope.directions.downLeft];
     
-    var updateViewPosition = () => {
+ var updateViewPosition = () => {
+
         var { row, column } = $scope.position;
         var position = $scope.gameboard[row][column].getPosition();
 
-        $scope.isJumping = true;
-
         $scope.top = position.top;
         $scope.left = position.left;
-
     }
+    GameBoard.registerCharacter({ id: $scope.id, type: $scope.type, position: $scope.position })
 
-    GameBoard.registerCharacter({id: $scope.id, type: $scope.type, position: $scope.position });
-/*
     $timeout(() => {
-       updateViewPosition();
+        updateViewPosition();
     }, 0);
-*/
+
     function move() {
         var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope.id)
 
