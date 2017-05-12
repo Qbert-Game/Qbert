@@ -1,15 +1,18 @@
 export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
+    var id = 'qbert';
+    var type = 'qbert';
+
     var updateViewPosition = () => {
         var { row, column } = $scope.position;
+        var gameboard = GameBoard.get();
 
-        $scope.gameboard[row][column].getPosition().then((position) => {
+        gameboard[row][column].getPosition().then((position) => {
             $scope.top = position.top;
             $scope.left = position.left;
         });
     }
 
     var init = () => {
-        $scope.gameboard = GameBoard.get();
         $scope.position = {
             row: 0,
             column: 0
@@ -17,10 +20,7 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
 
         $scope.isJumping = false;
 
-        var id = 'qbert';
-        var type = 'qbert';
-
-        GameBoard.registerCharacter({ id, type, position: $scope.position })
+        GameBoard.registerCharacter({ id, type, position: $scope.position });
     };
 
     GameBoard.subscribe((data) => {
@@ -32,6 +32,7 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
                 break;
             }
             case GameBoard.actions.animationEnd: {
+                $scope.position = payload.position;
                 updateViewPosition();
                 $timeout(() => $scope.isJumping = false, 500);
                 break;

@@ -2,6 +2,7 @@ import _ from 'lodash';
 
 export default function buildPartials(name, component) {
     component.controller = component.controller || function () { };
+    component.scope = component.scope || true;
 
     var directive = _.extend(component, { restrict: 'E' });
 

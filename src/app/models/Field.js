@@ -47,6 +47,14 @@ export default class Field {
     getPosition() {
         var { $rootScope, $q } = this;
         var deferred = $q.defer();
+        var position = $(`#${this.id}`).offset();
+
+        if (position) {
+            position.top -= 10;
+            position.left += 20;
+            
+            return $q.when(position);
+        }
 
         var unwatch = $rootScope.$watch(() => $(`#${this.id}`).offset(), (position) => {
             if (!position) {
