@@ -1,12 +1,18 @@
 export default function ($scope, Timer, GameBoard, Game, $timeout) {
-    Game.startLevel(1);
-    Timer.start();
+    // wait for all partials to be loaded
+    $timeout(() => {
+        Game.startLevel(1);
+        Timer.start();
+    }, 0);
 
-    $scope.gameBoard = GameBoard.get();
+    Game.subscribe((data) => {
+        var { action } = data;
 
-    $scope.qbert = GameBoard.qbert;
+        if (action !== Game.actions.levelStarted) {
+            return;
+        }
 
-    Timer.subscribe(() => {
-        $scope.possibleMoves = GameBoard.getPossibleMoves('qbert');
-    });
+        $scope.gameBoard = GameBoard.get();
+        $scope.qbert = GameBoard.qbert;
+    })
 }

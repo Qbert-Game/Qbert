@@ -4,10 +4,14 @@
     .key {
         width: 50px;
         height: 50px;
-        background: rgba(255, 255, 255, 0.3);
         text-align: center;
-        border: 2px solid #fff;
+        border: 2px solid yellow;
         margin: 10px;
+    }
+
+    .key:active {
+        background: yellow;
+        color: #000;
     }
 
     .right {
@@ -21,5 +25,13 @@
     .key.ng-hide {
         display: flex !important;
         visibility: hidden;
+    }
+}
+
+.keyboard.lock {
+    .key, .key:active {
+        background: none;
+        border-color: #555;
+        color: #555;
     }
 }

@@ -1,7 +1,7 @@
 import uuid from 'utils/uuid';
 
 export default class Field {
-    constructor({ row, column, stepsToTarget }) {
+    constructor({ row, column, stepsToTarget, $q, $rootScope }) {
         this.id = uuid();
 
         this.colors = App.defaults.fieldColors;
@@ -12,6 +12,8 @@ export default class Field {
         this.currentColor = this.colors[this.qbertVisits];
 
         this.coordinates = { row, column };
+        this.$q = $q;
+        this.$rootScope = $rootScope;
     }
 
     addVisitor({ type, id }) {
@@ -31,6 +33,8 @@ export default class Field {
             return;
         }
 
+        this.onColorChangedCallback();
+
         setTimeout(() => {
             this.currentColor = this.colors[++this.qbertVisits];
 
@@ -41,14 +45,29 @@ export default class Field {
     }
 
     getPosition() {
-        var position = $(`#${this.id}`).offset();
-        position.top -= 10;
-        position.left += 20;
+        var { $rootScope, $q } = this;
+        var deferred = $q.defer();
 
-        return position;
+        var unwatch = $rootScope.$watch(() => $(`#${this.id}`).offset(), (position) => {
+            if (!position) {
+                return;
+            }
+
+            position.top -= 10;
+            position.left += 20;
+
+            unwatch();
+            deferred.resolve(position);
+        });
+
+        return deferred.promise;
     }
 
     onTargetReached(callback) {
         this.onTargetReachedCallback = callback;
+    }
+
+    onColorChanged(callback) {
+        this.onColorChangedCallback = callback;
     }
 }

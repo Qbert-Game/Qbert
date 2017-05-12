@@ -1,6 +1,6 @@
 import Field from 'models/Field';
 
-export default function ($rootScope, Timer, Observable) {
+export default function ($rootScope, Timer, Observable, $q) {
     var observable = new Observable();
     var gameBoard, characters, movesStack;
     var reached = 0, fieldsNumber = 28;
@@ -8,7 +8,8 @@ export default function ($rootScope, Timer, Observable) {
     var actions = {
         animationStart: 'ANIMATION_START',
         animationEnd: 'ANIMATION_END',
-        levelCompleted: 'LEVEL_COMPLETED'
+        levelCompleted: 'LEVEL_COMPLETED',
+        colorChanged: 'COLOR_CHANGED',
     };
 
     var generateGameBoard = (stepsToTarget) => {
@@ -18,13 +19,17 @@ export default function ($rootScope, Timer, Observable) {
             var row = [];
 
             for (let j = 0; j < i + 1; j++) {
-                let field = new Field({ row: i, column: j, stepsToTarget });
+                let field = new Field({ row: i, column: j, stepsToTarget, $q, $rootScope });
                 field.onTargetReached(() => {
                     reached++;
 
                     if (reached === fieldsNumber) {
                         observable.next({ action: actions.levelCompleted });
                     }
+                });
+
+                field.onColorChanged(() => {
+                    observable.next({ action: actions.colorChanged })
                 });
 
                 row.push(field);
@@ -91,6 +96,8 @@ export default function ($rootScope, Timer, Observable) {
         gameBoard = generateGameBoard(stepsToTarget);
         characters = [];
         movesStack = [];
+        reached = 0;
+        fieldsNumber = 28;
     };
 
     observable.actions = actions;
@@ -109,9 +116,7 @@ export default function ($rootScope, Timer, Observable) {
                 var targetField = gameBoard[targetPos.row][targetPos.column];
                 moves.push({ direction: dir, target: targetField });
             }
-
         }
-
 
         if (character.type != "qbert")
             moves = moves.filter(m => m.target.visitors.length == 0)
