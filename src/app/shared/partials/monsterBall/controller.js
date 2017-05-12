@@ -1,23 +1,33 @@
-export default async function ($scope, $rootScope, $timeout, GameBoard, MonsterUtils) {
+export default async function ($scope, $rootScope, $timeout, GameBoard, Game, MonsterUtils) {
     $scope.gameboard = GameBoard.get();
     $scope.id = "xd";
     $scope.type = "ball";
     $scope.position = {row: 1, column: 1};
     $scope.moves = [$rootScope.directions.downRight, $rootScope.directions.downLeft];
     
- var updateViewPosition = () => {
-
+    var updateViewPosition = () => {
         var { row, column } = $scope.position;
-        var position = $scope.gameboard[row][column].getPosition();
+        var gameboard = GameBoard.get();
 
-        $scope.top = position.top;
-        $scope.left = position.left;
+        gameboard[row][column].getPosition().then((position) => {
+            $scope.top = position.top;
+            $scope.left = position.left;
+        });
     }
-    GameBoard.registerCharacter({ id: $scope.id, type: $scope.type, position: $scope.position })
 
-    $timeout(() => {
-        updateViewPosition();
-    }, 0);
+    var init = () => {
+        $scope.position = {
+            row: 3,
+            column: 0
+        }
+
+        $scope.isJumping = false;
+
+        var id = 'ball';
+        var type = 'ball';
+
+        GameBoard.registerCharacter({ id, type, position: $scope.position });
+    };
 
     function move() {
         var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope.id)
@@ -28,7 +38,15 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, MonsterU
         }
     }
 
-    function getMoves(){
-        return $scope.moves;
-    }
+    Game.subscribe((data) => {
+        var { action } = data;
+
+        switch (action) {
+            case Game.actions.levelStarted: {
+                init();
+                updateViewPosition();
+                break;
+            }
+        }
+    });
 }

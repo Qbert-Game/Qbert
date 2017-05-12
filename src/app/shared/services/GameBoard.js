@@ -83,7 +83,7 @@ export default function ($rootScope, Timer, Observable, $q) {
             var field = gameBoard[row][column];
             field.addVisitor(character);
 
-            observable.next({ action: actions.animationEnd, payload: { id, direction } });
+            observable.next({ action: actions.animationEnd, payload: { id, direction, position: character.position } });
         }
     };
 
