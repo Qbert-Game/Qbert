@@ -1,6 +1,8 @@
 <div class="game" layout-fill layout="column" layout-align="center center">
     <info></info>
 
+    <div flex></div>
+
     <div ng-repeat="row in gameBoard" layout="row" layout-align="center center">
         <div ng-repeat="field in row track by $index" class="field" ng-class="{ 'top' : $parent.$index === 0 }">
             <field id="{{field.id}}" field="field" style="height: 60px; width: 60px; display: block;"></field>
@@ -11,5 +13,8 @@
     <monster-coily></monster-coily>
     <monster-ball></monster-ball>
     <monster-sam></monster-sam>
+
+    <div flex></div>
+
     <keyboard></keyboard>
 </div>
