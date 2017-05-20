@@ -1,19 +1,104 @@
-export default async function ($scope, $rootScope, Gameboard, MonsterUtils) {
-    $scope.id = "0";
-    $scope.type = "sam";
-    $scopee.positon = null;
-    $scope.moves = [$rootScope.directions.downRight, $rootScope.directions.downLeft];
+export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Timer, MonsterUtils) {
+    var id = 'sam' + $scope.$id;
+    var type = 'sam';
+    var moves = [$rootScope.directions.downRight, $rootScope.directions.downLeft];
+
+    var updateViewPosition = () => {
+        var { row, column } = $scope.position;
+        var gameboard = GameBoard.get();
+
+        gameboard[row][column].getPosition().then((position) => {
+            $scope.top = position.top;
+            $scope.left = position.left;
+        });
+    }
 
     function move() {
-        var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope.id)
+        var possibleMoves = MonsterUtils.getPossibleMonsterMoves(id, moves)
 
         if (possibleMoves.length > 0) {
-            var move = MonsterUtils.random(possibleMoves);
-            Gameboard.move({id: $scope.id, direction: move})
+            var move = MonsterUtils.randomMove(possibleMoves);
+            GameBoard.move({ id: id, direction: move })
         }
     }
 
-    function getMoves(){
-        return $scope.moves;
+    var init = () => {
+        $scope.position = {
+            row: 2,
+            column: 1
+        }
+
+        $scope.isJumping = false;
+        $scope.isAlive = true;
+
+        GameBoard.registerCharacter({ id, type, position: $scope.position });
+
+        Timer.subscribe(move);
+    };
+
+    GameBoard.subscribe((data) => {
+        var { action, payload } = data;
+
+        if (!payload || payload.id != id) {
+            return;
+        }
+
+        switch (action) {
+            case GameBoard.actions.animationStart: {
+                $scope.isJumping = true;
+                break;
+            }
+            case GameBoard.actions.animationEnd: {
+                $scope.position = payload.position;
+                updateViewPosition();
+                $timeout(() => $scope.isJumping = false, 500);
+                break;
+            }
+            case GameBoard.actions.monsterDying: {
+                if($scope.position.row !== 6){
+                    console.log("die in place");
+                    dieInPlace();}
+                else
+                    dieByJumping();
+            }
+        }
+    });
+
+    function dieInPlace() {
+        $timeout(() => {
+            $scope.isDyingInPlace = true;
+        }, 500);
+        $timeout(() => {
+            $scope.isDyingInPlace = false;
+            $scope.isAlive = false;
+        }, 900)
     }
+
+    function dieByJumping() {
+        $timeout(() => {
+            $scope.isJumping = true;
+            $scope.top += 50;
+            $scope.left += 20;
+        }, 1000);
+        $timeout(() => {
+            $scope.isJumping = false;
+            $scope.isDyingByJump = true;
+        }, 1300);
+        $timeout(() => {
+            $scope.isDyingByJump = false;
+            $scope.isAlive = false;
+        }, 1800)
+    }
+
+    Game.subscribe((data) => {
+        var { action } = data;
+
+        switch (action) {
+            case Game.actions.levelStarted: {
+                init();
+                updateViewPosition();
+                break;
+            }
+        }
+    });
 }

@@ -1,6 +1,6 @@
 import Field from 'models/Field';
 
-export default function ($rootScope, Timer, Observable, $q) {
+export default function ($rootScope, Timer, Observable, $q, $timeout) {
     var observable = new Observable();
     var gameBoard, characters, movesStack;
     var reached = 0, fieldsNumber = 28;
@@ -10,6 +10,8 @@ export default function ($rootScope, Timer, Observable, $q) {
         animationEnd: 'ANIMATION_END',
         levelCompleted: 'LEVEL_COMPLETED',
         colorChanged: 'COLOR_CHANGED',
+        colorReverted: 'COLOR_REVERTED',
+        monsterDying: 'MONSTER_DYING'
     };
 
     var generateGameBoard = (stepsToTarget) => {
@@ -31,6 +33,10 @@ export default function ($rootScope, Timer, Observable, $q) {
                 field.onColorChanged(() => {
                     observable.next({ action: actions.colorChanged })
                 });
+
+                field.onColorReverted(() => {
+                    observable.next({ action: actions.colorReverted })
+                })
 
                 row.push(field);
             }
@@ -82,10 +88,46 @@ export default function ($rootScope, Timer, Observable, $q) {
 
             var field = gameBoard[row][column];
             field.addVisitor(character);
-
+            
             observable.next({ action: actions.animationEnd, payload: { id, direction, position: character.position } });
+            handleActionsAfterMove(field);
         }
     };
+
+    var handleActionsAfterMove = (field) => {
+        var visitors = field.getVisitors();
+        var qbert = visitors.filter(v => v.type === 'qbert')[0];
+        var monster = visitors.filter(v => v.type !== 'qbert')[0];
+
+        if(qbert && monster){
+            if(monster.type === 'sam')
+                killMonster(monster.id, field);
+            else
+                killQbert();
+        } else if(monster){
+            if(monster.type == 'sam')
+                field.revertColor();
+            if((monster.type == 'sam' || monster.type == 'ball') && field.getCoordinates().row === 6)
+                killMonster(monster.id, field);
+        }
+    }
+
+    var killMonster = (monsterToKillId, field) => {
+        observable.next({ action: actions.monsterDying, payload: { id: monsterToKillId} });
+        field.removeVisitor({id: monsterToKillId});
+
+
+        /* errors caused by remaining timer subscription 
+        for(var monster of characters) {
+            if(monster.id === monsterToKillId)
+                characters.splice(characters.indexOf(monster), 1);
+        } */
+    }
+
+    var killQbert = () => {
+        console.log("qbert killed")
+    }
+    
 
     Timer.subscribe(makeMoves);
 
@@ -104,6 +146,8 @@ export default function ($rootScope, Timer, Observable, $q) {
 
     observable.get = () => gameBoard;
 
+    observable.getQbert = () => getCharacterById('qbert');
+
     observable.getPossibleMoves = (id) => {
         var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
         var directions = [upRight, upLeft, downRight, downLeft]
@@ -119,7 +163,7 @@ export default function ($rootScope, Timer, Observable, $q) {
         }
 
         if (character.type != "qbert")
-            moves = moves.filter(m => m.target.visitors.length == 0)
+            moves = moves.filter(m => m.target.visitors.length == 0 || m.target.visitors[0].type == 'qbert');
 
         return moves.map(m => m.direction);
     };
@@ -127,6 +171,7 @@ export default function ($rootScope, Timer, Observable, $q) {
     observable.registerCharacter = ({ id, type, position }) => {
         var character = { id, type, position };
         characters.push(character);
+        gameBoard[position.row][position.column].addVisitor(character);
     };
 
     observable.move = ({ id, direction }) => {

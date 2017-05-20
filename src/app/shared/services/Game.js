@@ -3,7 +3,8 @@ export default function (Observable, GameBoard) {
     
     var actions = {
         levelStarted: 'LEVEL_STARTED',
-        pointsAdded: 'POINTS_ADDED'
+        pointsAdded: 'POINTS_ADDED',
+        pointsSubtracted: 'POINTS_SUBTRACTED'
     };
 
     var level = 0;
@@ -28,6 +29,11 @@ export default function (Observable, GameBoard) {
             case GameBoard.actions.colorChanged: {
                 points += 25;
                 observable.next({ action: actions.pointsAdded, payload: { points } })
+                break;
+            }
+            case GameBoard.actions.colorReverted: {
+                points -= 25;
+                observable.next({ action: actions.pointsSubtracted, payload: { points } })
                 break;
             }
         }

@@ -1,41 +1,112 @@
-export default async function ($scope, $rootScope, MonsterUtils, Gameboard) {
-    $scope.id = "0";
-    $scope.type = "coily";
-    $scope.position = null;
-    $scope.isTransformed = false;
-    $scope.moves = getMoves();
+export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Timer, MonsterUtils) {
+    var id = 'coily' + $scope.$id;
+    var type = 'coily';
+    var moves = getMoves();
+
+    var updateViewPosition = () => {
+        var { row, column } = $scope.position;
+        var gameboard = GameBoard.get();
+
+        gameboard[row][column].getPosition().then((position) => {
+            $scope.top = position.top;
+            $scope.left = position.left;
+        });
+    }
 
     function move() {
-        var possibleMoves = MonsterUtils.getPossibleMonsterMoves($scope.id);
-        var myPos = $scope.position;
-        var qbertPos = Gameboard.getQbertPos();
+        var possibleMoves = MonsterUtils.getPossibleMonsterMoves(id, moves);
+        var qbertPos = GameBoard.getQbert().position;
 
         if (possibleMoves.length > 0) {
-            getBestMove(myPos, qbertPos, possibleMoves);
-            Gameboard.move({id: $scope.id, direction: move});
+            var move = getBestMove($scope.position, qbertPos, possibleMoves);
+            GameBoard.move({ id: id, direction: move });
         }
     }
+
+    var init = () => {
+        $scope.position = { row: 3, column: 3 };
+
+        $scope.isJumping = false;
+        $scope.isAlive = true;
+        $scope.isTransformed = false;
+
+        GameBoard.registerCharacter({ id, type, position: $scope.position });
+
+        Timer.subscribe(move);
+    };
+
+    GameBoard.subscribe((data) => {
+        var { action, payload } = data;
+
+        if (!payload || payload.id != id) {
+            return;
+        }
+
+        switch (action) {
+            case GameBoard.actions.animationStart: {
+                $scope.isJumping = true;
+                break;
+            }
+            case GameBoard.actions.animationEnd: {
+                $scope.position = payload.position;
+                updateViewPosition();
+                $timeout(() => {
+                    $scope.isJumping = false;
+                    if(!$scope.isTransformed && $scope.position.row === 6)
+                        transform();
+                }, 500);
+                break;
+            }
+            case GameBoard.actions.monsterDying: {
+                die();
+            }
+        }
+    });
+
+    function die() {
+        $timeout(() => {
+            $scope.isDying = true;
+        }, 500);
+        $timeout(() => {
+            $scope.isDying = false;
+            $scope.isAlive = false;
+        }, 900)
+    }
+
+    Game.subscribe((data) => {
+        var { action } = data;
+
+        switch (action) {
+            case Game.actions.levelStarted: {
+                init();
+                updateViewPosition();
+                break;
+            }
+        }
+    });
 
     function getBestMove(monsterPos, qbertPos, possibleMoves) {
         if (!$scope.isTransformed)
-            return MonsterUtils.random(possibleMoves);
+            return MonsterUtils.randomMove(possibleMoves);
+            
+        var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
+        var bestMove = null;
 
-        var bestMove = { move: null, distanceFromQbert: Infinity };
+        if(qbertPos.column === monsterPos.column)
+            bestMove = (qbertPos.row > monsterPos.row) ? downLeft : upRight; 
+        else if(qbertPos.column - monsterPos.column === qbertPos.row - monsterPos.row)
+            bestMove = (qbertPos.row > monsterPos.row) ? downRight : upLeft;
+        else if(qbertPos.row <= monsterPos.row)
+            bestMove = (qbertPos.column < monsterPos.column) ? upLeft : upRight;
+        else
+            bestMove = (qbertPos.column < monsterPos.column) ? downLeft : downRight;
 
-        for (var move of possibleMoves) {
-            var startPos = MonsterUtils.getPosAfterMove(monsterPos, move);
-            var distanceFromQbert = MonsterUtils.distanceBetween(startPos, qbertPos);
-            if (distanceFromQbert < bestMove.distanceFromQbert) {
-                bestMove.move = move;
-                bestMove.distanceFromQbert = distanceFromQbert;
-            }
-        }
-
-        return bestMove.move;
+        return possibleMoves.includes(bestMove) ? bestMove : MonsterUtils.randomMove(possibleMoves);
     }
 
     function transform() {
-        $scope.transformed = true;
+        $scope.isTransformed = true;
+        moves = getMoves();
     }
 
     function getMoves() {
