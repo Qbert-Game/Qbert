@@ -17,21 +17,41 @@ export default function (Observable, GameBoard) {
     var levels = [
         {
             addMonsterAfterSteps: 5,
-            addCoilyAfterSteps: 20
+            addCoilyAfterSteps: 20,
+            stepsToTarget: 1
         },
         {
             addMonsterAfterSteps: 3,
-            addCoilyAfterSteps: 10
+            addCoilyAfterSteps: 10,
+            stepsToTarget: 1            
+        },
+        {
+            addMonsterAfterSteps: 5,
+            addCoilyAfterSteps: 20,
+            stepsToTarget: 2
+        },
+        {
+            addMonsterAfterSteps: 3,
+            addCoilyAfterSteps: 10,
+            stepsToTarget: 2            
+        },
+        {
+            addMonsterAfterSteps: 5,
+            addCoilyAfterSteps: 20,
+            stepsToTarget: 3
+        },
+        {
+            addMonsterAfterSteps: 3,
+            addCoilyAfterSteps: 10,
+            stepsToTarget: 3            
         }
     ]
 
     observable.actions = actions;
 
-    observable.playing = false;
-
     observable.startLevel = (level_) => {
         level = level_;
-        observable.playing = true;
+
         GameBoard.start(level);
         observable.next({ action: actions.levelStarted, payload: { level } });
     }
