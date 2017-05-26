@@ -1,1 +1,3 @@
-<div ng-style="{ 'top' : top, 'left' : left }" style="position: absolute;">Ball</div>
+<img height="25" width="25" src="assets/images/ball.png" class="monster animated" 
+    ng-class="{ 'bounce' : isJumping, 'fadeOutDown': isDying, 'invisibleMonster': !isAlive}"
+    ng-style="{ 'top' : top, 'left' : left }" style="position: absolute;"/>

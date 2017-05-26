@@ -1,1 +1,3 @@
-<div>Coily</div>
+<img height="25" ng-src="{{isTransformed && 'assets/images/coilySnake.png' || 'assets/images/coilyBall.png'}}" class="monster animated" 
+    ng-class="{ 'bounce' : isJumping, 'fadeOutDown': isDying, 'invisibleMonster': !isAlive}"
+    ng-style="{ 'top' : top, 'left' : left, 'height': isTransformed ? 30 : 25, 'width': isTransformed ? 25 : 25}" style="position: absolute;"/>

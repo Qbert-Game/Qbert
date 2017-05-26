@@ -44,6 +44,17 @@ export default class Field {
         }, 100);
     }
 
+    revertColor(){
+        if (this.qbertVisits === 0)
+            return;
+
+        this.onColorRevertedCallback();
+
+        setTimeout(() => {
+            this.currentColor = this.colors[--this.qbertVisits];
+        }, 100);
+    }
+
     getPosition() {
         var { $rootScope, $q } = this;
         var deferred = $q.defer();
@@ -71,11 +82,23 @@ export default class Field {
         return deferred.promise;
     }
 
+    getVisitors(){
+        return this.visitors;
+    }
+
+    getCoordinates(){
+        return this.coordinates;
+    }
+
     onTargetReached(callback) {
         this.onTargetReachedCallback = callback;
     }
 
     onColorChanged(callback) {
         this.onColorChangedCallback = callback;
+    }
+
+    onColorReverted(callback) {
+        this.onColorRevertedCallback = callback;
     }
 }

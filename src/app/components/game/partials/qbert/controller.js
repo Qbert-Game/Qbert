@@ -14,7 +14,7 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
 
     var init = () => {
         $scope.position = {
-            row: 0,
+            row: 1,
             column: 0
         }
 
@@ -25,6 +25,10 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
 
     GameBoard.subscribe((data) => {
         var { action, payload } = data;
+
+        if (!payload || payload.id != id) {
+            return;
+        }
 
         switch (action) {
             case GameBoard.actions.animationStart: {
