@@ -5,17 +5,16 @@ export default function ($scope, Timer, GameBoard, Game, $timeout) {
         Timer.start();
     }, 0);
 
-    $scope.monsters = {
-        ball: [],
-        coily: [],
-        sam: []
-    };
-
     Game.subscribe((data) => {
         var { action, payload } = data;
 
         switch (action) {
             case Game.actions.levelStarted:
+                $scope.monsters = {
+                    ball: [],
+                    coily: [],
+                    sam: []
+                };
                 $scope.gameBoard = GameBoard.get();
                 $scope.qbert = GameBoard.qbert;
                 break;

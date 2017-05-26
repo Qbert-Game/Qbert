@@ -10,6 +10,18 @@ export default function (Observable, GameBoard) {
 
     var level = 0;
     var points = 0;
+    var stepsMade = 0;
+
+    var levels = [
+        {
+            addMonsterAfterSteps: 5,
+            addCoilyAfterSteps: 20
+        },
+        {
+            addMonsterAfterSteps: 3,
+            addCoilyAfterSteps: 10
+        }
+    ]
 
     observable.actions = actions;
 
@@ -23,10 +35,14 @@ export default function (Observable, GameBoard) {
     }
 
     GameBoard.subscribe((data) => {
-        var { action } = data;
+        var { action, payload } = data;
 
         switch (action) {
             case GameBoard.actions.levelCompleted: {
+                if (level === levels.length) {
+                    alert('You won!')
+                }
+
                 observable.startLevel(++level);
                 break;
             }
@@ -40,16 +56,35 @@ export default function (Observable, GameBoard) {
                 observable.next({ action: actions.pointsSubtracted, payload: { points } })
                 break;
             }
+            case GameBoard.actions.animationEnd: {
+                if (payload.id !== 'qbert') {
+                    return;
+                }
+
+                stepsMade++;
+                addCharacter();
+            }
         }
     });
 
-    setInterval(() => {
-        var index = Math.floor(Math.random() * 3);
-        var types = ['ball', 'coily', 'sam'];
-        var type = types[index];
+    var addCharacter = () => {
+        var levelCfg = levels[level - 1];
+        if (stepsMade % levelCfg.addMonsterAfterSteps !== 0) {
+            return;
+        }
+
+        if (stepsMade === levelCfg.addCoilyAfterSteps) {
+            let type = 'coily'
+            observable.next({ action: actions.addCharacter, payload: { type } });
+            return;
+        }
+
+        var index = Math.floor(Math.random() * 2);
+        var types = ['ball', 'sam'];
+        let type = types[index];
 
         observable.next({ action: actions.addCharacter, payload: { type } });
-    }, 5000);
+    };
 
     return observable;
 }
