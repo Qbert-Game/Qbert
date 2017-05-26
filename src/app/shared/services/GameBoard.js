@@ -36,7 +36,14 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
 
                 field.onColorReverted(() => {
                     observable.next({ action: actions.colorReverted })
-                })
+                });
+
+                field.onQbertKilled(() => {
+                    console.log("qbert killed")
+                });
+                    
+                field.onMonsterKilled((monsterToKillId, field) => {
+                    observable.next({ action: actions.monsterDying, payload: { id: monsterToKillId} });                });
 
                 row.push(field);
             }
@@ -90,44 +97,9 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
             field.addVisitor(character);
             
             observable.next({ action: actions.animationEnd, payload: { id, direction, position: character.position } });
-            handleActionsAfterMove(field);
         }
     };
 
-    var handleActionsAfterMove = (field) => {
-        var visitors = field.getVisitors();
-        var qbert = visitors.filter(v => v.type === 'qbert')[0];
-        var monster = visitors.filter(v => v.type !== 'qbert')[0];
-
-        if(qbert && monster){
-            if(monster.type === 'sam')
-                killMonster(monster.id, field);
-            else
-                killQbert();
-        } else if(monster){
-            if(monster.type == 'sam')
-                field.revertColor();
-            if((monster.type == 'sam' || monster.type == 'ball') && field.getCoordinates().row === 6)
-                killMonster(monster.id, field);
-        }
-    }
-
-    var killMonster = (monsterToKillId, field) => {
-        observable.next({ action: actions.monsterDying, payload: { id: monsterToKillId} });
-        field.removeVisitor({id: monsterToKillId});
-
-
-        /* errors caused by remaining timer subscription 
-        for(var monster of characters) {
-            if(monster.id === monsterToKillId)
-                characters.splice(characters.indexOf(monster), 1);
-        } */
-    }
-
-    var killQbert = () => {
-        console.log("qbert killed")
-    }
-    
 
     Timer.subscribe(makeMoves);
 
