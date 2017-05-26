@@ -4,11 +4,13 @@ export default function (Observable, GameBoard) {
     var actions = {
         levelStarted: 'LEVEL_STARTED',
         pointsAdded: 'POINTS_ADDED',
-        pointsSubtracted: 'POINTS_SUBTRACTED'
+        pointsSubtracted: 'POINTS_SUBTRACTED',
+        qbertKilled: 'QBERT_KILLED_G'
     };
 
     var level = 0;
     var points = 0;
+    var lives = 3;
 
     observable.actions = actions;
 
@@ -35,6 +37,14 @@ export default function (Observable, GameBoard) {
                 points -= 25;
                 observable.next({ action: actions.pointsSubtracted, payload: { points } })
                 break;
+            }
+            case GameBoard.actions.qbertKilled: {
+                if(lives > 0){
+                    lives--;
+                    observable.next({ action: actions.qbertKilled, payload: {}});
+                } else {
+                    console.log("GAME OVER");
+                }
             }
         }
     });

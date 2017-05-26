@@ -11,7 +11,8 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
         levelCompleted: 'LEVEL_COMPLETED',
         colorChanged: 'COLOR_CHANGED',
         colorReverted: 'COLOR_REVERTED',
-        monsterDying: 'MONSTER_DYING'
+        monsterDying: 'MONSTER_DYING',
+        qbertKilled: 'QBERT_KILLED_GB'
     };
 
     var generateGameBoard = (stepsToTarget) => {
@@ -39,11 +40,18 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
                 });
 
                 field.onQbertKilled(() => {
-                    console.log("qbert killed")
+                    console.log("qbert killed");
+                    var qbert = getCharacterById('qbert');
+                    field.removeVisitor(qbert);
+                    gameBoard[0][0].addVisitor(qbert);
+                    qbert.position = {row: 0, column: 0}
+                    observable.next({ action: actions.qbertKilled, payload: { id: 'qbert', position: {row: 0, column: 0}} });
+
                 });
                     
                 field.onMonsterKilled((monsterToKillId, field) => {
-                    observable.next({ action: actions.monsterDying, payload: { id: monsterToKillId} });                });
+                    observable.next({ action: actions.monsterDying, payload: { id: monsterToKillId} });
+                });
 
                 row.push(field);
             }
