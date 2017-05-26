@@ -1,10 +1,11 @@
 export default function (Observable, GameBoard) {
     var observable = new Observable();
-    
+
     var actions = {
         levelStarted: 'LEVEL_STARTED',
         pointsAdded: 'POINTS_ADDED',
-        pointsSubtracted: 'POINTS_SUBTRACTED'
+        pointsSubtracted: 'POINTS_SUBTRACTED',
+        addCharacter: 'ADD_CHARACTER'
     };
 
     var level = 0;
@@ -12,8 +13,11 @@ export default function (Observable, GameBoard) {
 
     observable.actions = actions;
 
+    observable.playing = false;
+
     observable.startLevel = (level_) => {
         level = level_;
+        observable.playing = true;
         GameBoard.start(level);
         observable.next({ action: actions.levelStarted, payload: { level } });
     }
@@ -38,6 +42,14 @@ export default function (Observable, GameBoard) {
             }
         }
     });
+
+    setInterval(() => {
+        var index = Math.floor(Math.random() * 3);
+        var types = ['ball', 'coily', 'sam'];
+        var type = types[index];
+
+        observable.next({ action: actions.addCharacter, payload: { type } });
+    }, 5000);
 
     return observable;
 }

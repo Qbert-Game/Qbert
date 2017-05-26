@@ -77,15 +77,6 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
         }, 1800)
     }
 
-    Game.subscribe((data) => {
-        var { action } = data;
-
-        switch (action) {
-            case Game.actions.levelStarted: {
-                init();
-                updateViewPosition();
-                break;
-            }
-        }
-    });
+    init();
+    updateViewPosition();
 }
