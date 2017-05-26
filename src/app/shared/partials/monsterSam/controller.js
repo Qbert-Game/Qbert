@@ -55,9 +55,10 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
                 break;
             }
             case GameBoard.actions.monsterDying: {
-                if($scope.position.row !== 6){
+                if ($scope.position.row !== 6) {
                     console.log("die in place");
-                    dieInPlace();}
+                    dieInPlace();
+                }
                 else
                     dieByJumping();
             }
@@ -90,15 +91,6 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
         }, 1800)
     }
 
-    Game.subscribe((data) => {
-        var { action } = data;
-
-        switch (action) {
-            case Game.actions.levelStarted: {
-                init();
-                updateViewPosition();
-                break;
-            }
-        }
-    });
+    init();
+    updateViewPosition();
 }

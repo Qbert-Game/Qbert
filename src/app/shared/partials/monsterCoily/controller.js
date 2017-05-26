@@ -52,7 +52,7 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
                 updateViewPosition();
                 $timeout(() => {
                     $scope.isJumping = false;
-                    if(!$scope.isTransformed && $scope.position.row === 6)
+                    if (!$scope.isTransformed && $scope.position.row === 6)
                         transform();
                 }, 500);
                 break;
@@ -73,30 +73,18 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
         }, 900)
     }
 
-    Game.subscribe((data) => {
-        var { action } = data;
-
-        switch (action) {
-            case Game.actions.levelStarted: {
-                init();
-                updateViewPosition();
-                break;
-            }
-        }
-    });
-
     function getBestMove(monsterPos, qbertPos, possibleMoves) {
         if (!$scope.isTransformed)
             return MonsterUtils.randomMove(possibleMoves);
-            
+
         var { upRight, upLeft, downRight, downLeft } = $rootScope.directions;
         var bestMove = null;
 
-        if(qbertPos.column === monsterPos.column)
-            bestMove = (qbertPos.row > monsterPos.row) ? downLeft : upRight; 
-        else if(qbertPos.column - monsterPos.column === qbertPos.row - monsterPos.row)
+        if (qbertPos.column === monsterPos.column)
+            bestMove = (qbertPos.row > monsterPos.row) ? downLeft : upRight;
+        else if (qbertPos.column - monsterPos.column === qbertPos.row - monsterPos.row)
             bestMove = (qbertPos.row > monsterPos.row) ? downRight : upLeft;
-        else if(qbertPos.row <= monsterPos.row)
+        else if (qbertPos.row <= monsterPos.row)
             bestMove = (qbertPos.column < monsterPos.column) ? upLeft : upRight;
         else
             bestMove = (qbertPos.column < monsterPos.column) ? downLeft : downRight;
@@ -116,4 +104,7 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
         else
             return [downRight, downLeft];
     }
+
+    init();
+    updateViewPosition();
 }

@@ -1,6 +1,8 @@
 <div class="game" layout-fill layout="column" layout-align="center center">
     <info></info>
 
+    <div flex></div>
+
     <div ng-repeat="row in gameBoard" layout="row" layout-align="center center">
         <div ng-repeat="field in row track by $index" class="field" ng-class="{ 'top' : $parent.$index === 0 }">
             <field id="{{field.id}}" field="field" style="height: 60px; width: 60px; display: block;"></field>
@@ -8,8 +10,11 @@
     </div>
 
     <qbert></qbert>
-    <monster-coily></monster-coily>
-    <monster-ball></monster-ball>
-    <monster-sam></monster-sam>
+    <monster-coily ng-repeat="monster in monsters.coily"></monster-coily>
+    <monster-ball ng-repeat="monster in monsters.ball"></monster-ball>
+    <monster-sam ng-repeat="monster in monsters.sam"></monster-sam>
+
+    <div flex></div>
+
     <keyboard></keyboard>
 </div>

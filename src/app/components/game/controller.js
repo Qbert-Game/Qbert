@@ -6,13 +6,22 @@ export default function ($scope, Timer, GameBoard, Game, $timeout) {
     }, 0);
 
     Game.subscribe((data) => {
-        var { action } = data;
+        var { action, payload } = data;
 
-        if (action !== Game.actions.levelStarted) {
-            return;
+        switch (action) {
+            case Game.actions.levelStarted:
+                $scope.monsters = {
+                    ball: [],
+                    coily: [],
+                    sam: []
+                };
+                $scope.gameBoard = GameBoard.get();
+                $scope.qbert = GameBoard.qbert;
+                break;
+            case Game.actions.addCharacter:
+                var { type } = payload;
+                $scope.monsters[type].push({});
+                break;
         }
-
-        $scope.gameBoard = GameBoard.get();
-        $scope.qbert = GameBoard.qbert;
     })
 }
