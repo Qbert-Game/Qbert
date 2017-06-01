@@ -41,6 +41,11 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
                 $timeout(() => $scope.isJumping = false, 500);
                 break;
             }
+            case GameBoard.actions.qbertKilled: {
+                $scope.position = payload.position;
+                updateViewPosition();
+                break;
+            }
         }
     });
 

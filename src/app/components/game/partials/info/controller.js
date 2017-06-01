@@ -1,5 +1,6 @@
 export default function ($scope, Game) {
     $scope.points = 0;
+    $scope.lives = 3;
 
     Game.subscribe(data => {
         var { action, payload } = data;
@@ -15,6 +16,11 @@ export default function ($scope, Game) {
             case Game.actions.pointsSubtracted: {
                 let { points } = payload;
                 $scope.points = points;
+                break;
+            }
+            case Game.actions.qbertKilled: {
+                if($scope.lives > 0)
+                    $scope.lives--;
                 break;
             }
 

@@ -22,6 +22,27 @@ export default class Field {
         if (type === 'qbert') {
             this.newQbertVisit();
         }
+
+        setTimeout(() => {
+            var qbert = this.visitors.filter(v => v.type === 'qbert')[0];
+            var monster = this.visitors.filter(v => v.type !== 'qbert')[0];
+
+            if (qbert && monster) {
+                if (monster.type === 'sam') {
+                    this.onMonsterKilledCallback(monster.id, this);
+                    this.removeVisitor({ id: monster.id });
+                } else {
+                    this.onQbertKilledCallback();
+                }
+            } else if (monster) {
+                if (monster.type == 'sam') {
+                    this.revertColor();
+                } if ((monster.type == 'sam' || monster.type == 'ball') && this.coordinates.row === 6) {
+                    this.onMonsterKilledCallback(monster.id, this);
+                    this.removeVisitor({ id: monster.id });
+                }
+            }
+        }, 100);
     }
 
     removeVisitor({ id }) {
@@ -33,10 +54,9 @@ export default class Field {
             return;
         }
 
-        this.onColorChangedCallback();
-
         setTimeout(() => {
             this.currentColor = this.colors[++this.qbertVisits];
+            this.onColorChangedCallback();
 
             if (this.qbertVisits === this.stepsToTarget) {
                 this.onTargetReachedCallback();
@@ -44,7 +64,7 @@ export default class Field {
         }, 100);
     }
 
-    revertColor(){
+    revertColor() {
         if (this.qbertVisits === 0)
             return;
 
@@ -63,7 +83,7 @@ export default class Field {
         if (position) {
             position.top -= 10;
             position.left += 20;
-            
+
             return $q.when(position);
         }
 
@@ -82,11 +102,11 @@ export default class Field {
         return deferred.promise;
     }
 
-    getVisitors(){
+    getVisitors() {
         return this.visitors;
     }
 
-    getCoordinates(){
+    getCoordinates() {
         return this.coordinates;
     }
 
@@ -100,5 +120,13 @@ export default class Field {
 
     onColorReverted(callback) {
         this.onColorRevertedCallback = callback;
+    }
+
+    onQbertKilled(callback) {
+        this.onQbertKilledCallback = callback;
+    }
+
+    onMonsterKilled(callback) {
+        this.onMonsterKilledCallback = callback;
     }
 }
