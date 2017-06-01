@@ -1,0 +1,15 @@
+<div layout="column" layout-align="center center" layout-fill style="text-align: center;">
+    <div layout="column" layout-align="center center" ng-if="gameEffect === 'victory'">
+        <img src="assets/images/prize.png" height="200">
+        <h1 class="md-headline">You won!</h1>
+        <h3 class="md-title">Congratulations</h3>
+    </div>
+
+    <div layout="column" layout-align="center center" ng-if="gameEffect === 'failure'">
+        <img src="assets/images/failure.png" height="200">
+        <h1 class="md-headline">You lose!</h1>
+        <h3 class="md-title">Don't worry</h3>
+    </div>
+
+    <md-button class="md-raised md-primary" ui-sref="game" style="margin-top: 30px;">Play again</md-button>
+</div>

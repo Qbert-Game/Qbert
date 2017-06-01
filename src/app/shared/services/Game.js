@@ -1,4 +1,4 @@
-export default function (Observable, GameBoard) {
+export default function (Observable, GameBoard, $state) {
     var observable = new Observable();
 
     var actions = {
@@ -23,7 +23,7 @@ export default function (Observable, GameBoard) {
         {
             addMonsterAfterSteps: 3,
             addCoilyAfterSteps: 10,
-            stepsToTarget: 1            
+            stepsToTarget: 1
         },
         {
             addMonsterAfterSteps: 5,
@@ -33,7 +33,7 @@ export default function (Observable, GameBoard) {
         {
             addMonsterAfterSteps: 3,
             addCoilyAfterSteps: 10,
-            stepsToTarget: 2            
+            stepsToTarget: 2
         },
         {
             addMonsterAfterSteps: 5,
@@ -43,7 +43,7 @@ export default function (Observable, GameBoard) {
         {
             addMonsterAfterSteps: 3,
             addCoilyAfterSteps: 10,
-            stepsToTarget: 3            
+            stepsToTarget: 3
         }
     ]
 
@@ -62,7 +62,7 @@ export default function (Observable, GameBoard) {
         switch (action) {
             case GameBoard.actions.levelCompleted: {
                 if (level === levels.length) {
-                    alert('You won!')
+                    $state.go('end', { effect: 'victory' });
                 }
 
                 observable.startLevel(++level);
@@ -79,11 +79,11 @@ export default function (Observable, GameBoard) {
                 break;
             }
             case GameBoard.actions.qbertKilled: {
-                if(lives > 0){
+                if (lives > 0) {
                     lives--;
-                    observable.next({ action: actions.qbertKilled, payload: {}});
+                    observable.next({ action: actions.qbertKilled, payload: {} });
                 } else {
-                    console.log("GAME OVER");
+                    $state.go('end', { effect: 'failure' });
                 }
             }
             case GameBoard.actions.animationEnd: {
