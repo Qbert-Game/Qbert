@@ -14,6 +14,7 @@ export default function ($scope, $timeout, GameBoard, Game) {
         var { action, payload } = data;
 
         switch (action) {
+            case GameBoard.actions.qbertKilled:
             case GameBoard.actions.animationEnd: {
                 $scope.jumpBlock = false;
                 $scope.possibleMoves = GameBoard.getPossibleMoves(id);
