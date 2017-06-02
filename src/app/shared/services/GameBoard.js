@@ -147,6 +147,9 @@ console.log('after', character.position);
         var character = getCharacterById(id);
         var moves = [];
 
+        if(!character)
+            return [];
+
         for (var dir of directions) {
             var targetPos = positionAfterMove(character.position, dir);
             if (gameBoard[targetPos.row] && gameBoard[targetPos.row][targetPos.column]) {
