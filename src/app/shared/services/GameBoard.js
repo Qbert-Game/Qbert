@@ -32,6 +32,10 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
                     }
                 });
 
+                field.onTargetLost(() => {
+                    reached--;
+                });
+
                 field.onColorChanged(() => {
                     observable.next({ action: actions.colorChanged })
                 });

@@ -67,6 +67,8 @@ export default class Field {
     revertColor() {
         if (this.qbertVisits === 0)
             return;
+        if (this.qbertVisits === this.stepsToTarget)
+            this.onTargetLostCallback();
 
         this.onColorRevertedCallback();
 
@@ -112,6 +114,10 @@ export default class Field {
 
     onTargetReached(callback) {
         this.onTargetReachedCallback = callback;
+    }
+
+    onTargetLost(callback) {
+        this.onTargetLostCallback = callback;
     }
 
     onColorChanged(callback) {
