@@ -1,1 +1,4 @@
-<img id="qbert" class="qbert animated" ng-class="{ 'bounce' : isJumping }" src="assets/images/qbert.png" height="35" ng-style="{ 'top' : top, 'left' : left }">
+<div class="qbert" ng-style="{ 'top' : top, 'left' : left }">
+    <img id="qbert" class="animated" ng-class="{ 'bounce' : isJumping }" src="assets/images/qbert.png" height="35">
+    <img class="speech-bubble" src="assets/images/speech-bubble.png" ng-show="showSpeechBubble" />
+</div>

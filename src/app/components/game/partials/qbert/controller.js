@@ -19,11 +19,12 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
         }
 
         $scope.isJumping = false;
+        $scope.showSpeechBubble = false;
 
         GameBoard.registerCharacter({ id, type, position: $scope.position });
     };
 
-    GameBoard.subscribe((data) => {
+    var gameBoardSubscription = GameBoard.subscribe((data) => {
         var { action, payload } = data;
 
         if (!payload || payload.id != id) {
@@ -43,13 +44,17 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
             }
             case GameBoard.actions.qbertKilled: {
                 $scope.position = payload.position;
-                updateViewPosition();
+                $scope.showSpeechBubble = true;                
+                $timeout(() => {
+                    $scope.showSpeechBubble = false;
+                    updateViewPosition();
+                }, 1000);
                 break;
             }
         }
     });
 
-    Game.subscribe((data) => {
+    var gameSubscription = Game.subscribe((data) => {
         var { action } = data;
 
         switch (action) {
@@ -59,5 +64,11 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
                 break;
             }
         }
+    });
+
+    $scope.$on('$destroy', () => {
+        gameBoardSubscription.unsubscribe();
+        gameSubscription.unsubscribe();
+        GameBoard.unregisterCharacter(id);
     });
 }

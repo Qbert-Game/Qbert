@@ -11,21 +11,20 @@ export default function ($scope, $timeout, GameBoard, Game) {
     }
 
     GameBoard.subscribe((data) => {
-        var { action } = data;
-
-        if (action === GameBoard.actions.animationEnd) {
-            $scope.jumpBlock = false;
-            $scope.possibleMoves = GameBoard.getPossibleMoves(id);
-        }
-    });
-
-    Game.subscribe((data) => {
-        var { action } = data;
+        var { action, payload } = data;
 
         switch (action) {
-            case Game.actions.levelStarted: {
+            case GameBoard.actions.animationEnd: {
+                $scope.jumpBlock = false;
                 $scope.possibleMoves = GameBoard.getPossibleMoves(id);
                 break;
+            }
+            case GameBoard.actions.registeredCharacter: {
+                if (payload.type !== 'qbert') {
+                    return;
+                }
+
+                $scope.possibleMoves = GameBoard.getPossibleMoves(id);
             }
         }
     });

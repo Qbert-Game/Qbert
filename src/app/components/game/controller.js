@@ -2,7 +2,10 @@ export default function ($scope, Timer, GameBoard, Game, $timeout) {
     // wait for all partials to be loaded
     $timeout(() => {
         Game.startLevel(1);
-        Timer.start();
+
+        if (!Timer.isTicking()) {
+            Timer.start();
+        }
     }, 0);
 
     Game.subscribe((data) => {

@@ -35,7 +35,7 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
         Timer.subscribe(move);
     };
 
-    GameBoard.subscribe((data) => {
+    var gameBoardSubscription = GameBoard.subscribe((data) => {
         var { action, payload } = data;
 
         if (!payload || payload.id != id) {
@@ -107,4 +107,9 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
 
     init();
     updateViewPosition();
+
+    $scope.$on('$destroy', () => {
+        gameBoardSubscription.unsubscribe();
+        GameBoard.unregisterCharacter(id);
+    });
 }

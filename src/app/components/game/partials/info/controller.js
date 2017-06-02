@@ -19,11 +19,10 @@ export default function ($scope, Game) {
                 break;
             }
             case Game.actions.qbertKilled: {
-                if($scope.lives > 0)
-                    $scope.lives--;
+                let { lives } = payload;
+                $scope.lives = lives;
                 break;
             }
-
         }
     });
 }

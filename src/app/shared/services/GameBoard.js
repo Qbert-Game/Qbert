@@ -12,7 +12,8 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
         colorChanged: 'COLOR_CHANGED',
         colorReverted: 'COLOR_REVERTED',
         monsterDying: 'MONSTER_DYING',
-        qbertKilled: 'QBERT_KILLED_GB'
+        qbertKilled: 'QBERT_KILLED_GB',
+        registeredCharacter: 'REGISTERED_CHARACTER'
     };
 
     var generateGameBoard = (stepsToTarget) => {
@@ -44,13 +45,13 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
                     var qbert = getCharacterById('qbert');
                     field.removeVisitor(qbert);
                     gameBoard[0][0].addVisitor(qbert);
-                    qbert.position = {row: 0, column: 0}
-                    observable.next({ action: actions.qbertKilled, payload: { id: 'qbert', position: {row: 0, column: 0}} });
+                    qbert.position = { row: 0, column: 0 }
+                    observable.next({ action: actions.qbertKilled, payload: { id: 'qbert', position: { row: 0, column: 0 } } });
 
                 });
-                    
+
                 field.onMonsterKilled((monsterToKillId, field) => {
-                    observable.next({ action: actions.monsterDying, payload: { id: monsterToKillId} });
+                    observable.next({ action: actions.monsterDying, payload: { id: monsterToKillId } });
                 });
 
                 row.push(field);
@@ -88,14 +89,18 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
         while (movesStack.length) {
             var { id, direction } = movesStack.pop();
 
-            observable.next({ action: actions.animationStart, payload: { id, direction } });
-
             var character = getCharacterById(id);
-            var coordinatesToAdd = directionToCoordinates(direction);
+
+            if (!character) {
+                break;
+            }
+
+            observable.next({ action: actions.animationStart, payload: { id, direction } });
 
             var previousField = gameBoard[character.position.row][character.position.column];
             previousField.removeVisitor(character);
 
+            var coordinatesToAdd = directionToCoordinates(direction);
             character.position.row += coordinatesToAdd.row;
             character.position.column += coordinatesToAdd.column;
 
@@ -103,7 +108,7 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
 
             var field = gameBoard[row][column];
             field.addVisitor(character);
-            
+
             observable.next({ action: actions.animationEnd, payload: { id, direction, position: character.position } });
         }
     };
@@ -152,6 +157,12 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
         var character = { id, type, position };
         characters.push(character);
         gameBoard[position.row][position.column].addVisitor(character);
+
+        observable.next({ action: actions.registeredCharacter, payload: { id, type } });
+    };
+
+    observable.unregisterCharacter = (id) => {
+        characters = characters.filter((x) => x.id !== id);
     };
 
     observable.move = ({ id, direction }) => {

@@ -1,4 +1,4 @@
-export default function (Observable, GameBoard, $state) {
+export default function (Observable, GameBoard, $state, $timeout, Timer) {
     var observable = new Observable();
 
     var actions = {
@@ -9,10 +9,7 @@ export default function (Observable, GameBoard, $state) {
         addCharacter: 'ADD_CHARACTER'
     };
 
-    var level = 0;
-    var points = 0;
-    var lives = 3;
-    var stepsMade = 0;
+    var level, points, lives, stepsMade;
 
     var levels = [
         {
@@ -45,11 +42,20 @@ export default function (Observable, GameBoard, $state) {
             addCoilyAfterSteps: 10,
             stepsToTarget: 3
         }
-    ]
+    ];
 
     observable.actions = actions;
 
+    observable.init = () => {
+        level = 0;
+        points = 0;
+        lives = 3;
+        stepsMade = 0;
+    };
+
     observable.startLevel = (level_) => {
+        observable.init();
+
         level = level_;
 
         GameBoard.start(level);
@@ -81,9 +87,11 @@ export default function (Observable, GameBoard, $state) {
             case GameBoard.actions.qbertKilled: {
                 if (lives > 0) {
                     lives--;
-                    observable.next({ action: actions.qbertKilled, payload: {} });
+                    observable.next({ action: actions.qbertKilled, payload: { lives } });
                 } else {
-                    $state.go('end', { effect: 'failure' });
+                    $timeout(() => {
+                        $state.go('end', { effect: 'failure' })
+                    }, 1500);
                 }
             }
             case GameBoard.actions.animationEnd: {
