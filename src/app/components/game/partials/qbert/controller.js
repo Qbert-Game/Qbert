@@ -14,7 +14,7 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
 
     var init = () => {
         $scope.position = {
-            row: 1,
+            row: 0,
             column: 0
         }
 
