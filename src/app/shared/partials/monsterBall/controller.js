@@ -22,6 +22,11 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
         }
     }
 
+    function unregister() {
+        gameBoardSubscription.unsubscribe();
+        GameBoard.unregisterCharacter(id);
+    }
+
     var init = () => {
         $scope.position = {
             row: 1,
@@ -62,6 +67,8 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
     });
 
     function die() {
+        unregister();
+        
         $timeout(() => {
             $scope.isJumping = true;
             $scope.top += 50;
@@ -81,7 +88,6 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
     updateViewPosition();
 
     $scope.$on('$destroy', () => {
-        gameBoardSubscription.unsubscribe();
-        GameBoard.unregisterCharacter(id);
+        unregister();
     });
 }

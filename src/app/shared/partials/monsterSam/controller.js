@@ -22,6 +22,11 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
         }
     }
 
+    function unregister() {
+        gameBoardSubscription.unsubscribe();
+        GameBoard.unregisterCharacter(id);
+    }
+
     var init = () => {
         $scope.position = {
             row: 2,
@@ -55,6 +60,8 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
                 break;
             }
             case GameBoard.actions.monsterDying: {
+                unregister();
+                
                 if ($scope.position.row !== 6) {
                     console.log("die in place");
                     dieInPlace();
@@ -95,7 +102,6 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
     updateViewPosition();
 
     $scope.$on('$destroy', () => {
-        gameBoardSubscription.unsubscribe();
-        GameBoard.unregisterCharacter(id);
+        unregister();
     });
 }
