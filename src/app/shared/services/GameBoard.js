@@ -46,6 +46,10 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
                     field.removeVisitor(qbert);
                     gameBoard[0][0].addVisitor(qbert);
                     qbert.position = { row: 0, column: 0 }
+
+                    // remove buffered qbert move
+                    movesStack = movesStack.filter((x) => x.id !== 'qbert');
+
                     observable.next({ action: actions.qbertKilled, payload: { id: 'qbert', position: { row: 0, column: 0 } } });
 
                 });
@@ -101,9 +105,13 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
             previousField.removeVisitor(character);
 
             var coordinatesToAdd = directionToCoordinates(direction);
+
+console.log('character', character.type);
+console.log('before', character.position);
+console.log('adding', coordinatesToAdd);
             character.position.row += coordinatesToAdd.row;
             character.position.column += coordinatesToAdd.column;
-
+console.log('after', character.position);
             var { row, column } = character.position;
 
             var field = gameBoard[row][column];
