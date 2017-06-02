@@ -63,7 +63,6 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
                 unregister();
                 
                 if ($scope.position.row !== 6) {
-                    console.log("die in place");
                     dieInPlace();
                 }
                 else

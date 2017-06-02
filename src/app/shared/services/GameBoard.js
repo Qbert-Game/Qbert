@@ -110,12 +110,8 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
 
             var coordinatesToAdd = directionToCoordinates(direction);
 
-console.log('character', character.type);
-console.log('before', character.position);
-console.log('adding', coordinatesToAdd);
             character.position.row += coordinatesToAdd.row;
             character.position.column += coordinatesToAdd.column;
-console.log('after', character.position);
             var { row, column } = character.position;
 
             var field = gameBoard[row][column];
@@ -177,6 +173,13 @@ console.log('after', character.position);
     };
 
     observable.unregisterCharacter = (id) => {
+        if (!characters.filter((x) => x.id === id).length) {
+            return;
+        }
+
+        var characterPos = getCharacterById(id).position;
+        var field = gameBoard[characterPos.row][characterPos.column];
+        field.removeVisitor({id: id});
         characters = characters.filter((x) => x.id !== id);
     };
 
