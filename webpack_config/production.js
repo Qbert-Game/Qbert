@@ -20,17 +20,19 @@ var local = {
             scripts: global.scripts,
             styles: global.styles
         }),
-        new CopyAssets({scripts: global.scripts, styles: global.styles}),
+        new CopyAssets({ scripts: global.scripts, styles: global.styles }),
         new CopyWebpackPlugin([{
             from: './src/assets/images', to: '../www/assets/images'
+        }, {
+            from: './src/assets/fonts', to: '../www/assets/fonts'
         }]),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'commons',
             filename: '../www/assets/scripts/commons.js'
         }),
         new webpack.optimize.UglifyJsPlugin({
-          exclude: /\app\.js$/,
-          warnings: false
+            exclude: /\app\.js$/,
+            warnings: false
         }),
         new webpack.DefinePlugin({
             NODE_ENV: JSON.stringify(JSON.parse(`"${process.env.NODE_ENV}"` || '"production"'))

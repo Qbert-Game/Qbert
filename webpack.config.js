@@ -41,7 +41,7 @@ module.exports.config = {
       },
       {
         test: /\.less$/,
-        loader: 'style!css!less',
+        loader: 'style!css?url=false!less',
       },
       {
         test: /\.html$/,
