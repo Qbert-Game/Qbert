@@ -1,6 +1,7 @@
 export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
     var id = 'qbert';
     var type = 'qbert';
+    var startingPos = null;
 
     var updateViewPosition = () => {
         var { row, column } = $scope.position;
@@ -9,6 +10,13 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
         gameboard[row][column].getPosition().then((position) => {
             $scope.top = position.top;
             $scope.left = position.left;
+
+            if(!startingPos && $scope.top)
+                startingPos = {top: $scope.top, left: $scope.left};
+            if(startingPos && startingPos.top > $scope.top){
+                $scope.top = startingPos.top;
+                $scope.left = startingPos.left;
+            }
         });
     }
 
