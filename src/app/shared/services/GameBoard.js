@@ -93,36 +93,48 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
         }
     }
 
-    var makeMoves = () => {
-        while (movesStack.length) {
-            var { id, direction } = movesStack.pop();
+    var makeMove = ({ id, direction }) => {
+        var character = getCharacterById(id);
 
-            var character = getCharacterById(id);
+        if (!character) {
+            return;
+        }
 
-            if (!character) {
-                break;
-            }
+        var coordinatesToAdd = directionToCoordinates(direction);
+        var { position } = character;
+        var afterMove = {
+            row: position.row + coordinatesToAdd.row,
+            column: position.column + coordinatesToAdd.column
+        };
 
+        var isFieldValid = afterMove.row >= 0 && afterMove.column >= 0;
+
+        if (isFieldValid) {
             observable.next({ action: actions.animationStart, payload: { id, direction } });
 
             var previousField = gameBoard[character.position.row][character.position.column];
             previousField.removeVisitor(character);
 
-            var coordinatesToAdd = directionToCoordinates(direction);
+            character.position.row = afterMove.row;
+            character.position.column = afterMove.column;
 
-            character.position.row += coordinatesToAdd.row;
-            character.position.column += coordinatesToAdd.column;
-            var { row, column } = character.position;
+            let { row, column } = afterMove;
 
             var field = gameBoard[row][column];
             field.addVisitor(character);
 
             observable.next({ action: actions.animationEnd, payload: { id, direction, position: character.position } });
         }
+    }
+
+    var makeScheduledMoves = () => {
+        while (movesStack.length) {
+            var { id, direction } = movesStack.pop();
+            makeMove({ id, direction });
+        }
     };
 
-
-    Timer.subscribe(makeMoves);
+    Timer.subscribe(makeScheduledMoves);
 
     /*
     ** Public interface
@@ -147,7 +159,7 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
         var character = getCharacterById(id);
         var moves = [];
 
-        if(!character)
+        if (!character)
             return [];
 
         for (var dir of directions) {
@@ -179,12 +191,16 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
 
         var characterPos = getCharacterById(id).position;
         var field = gameBoard[characterPos.row][characterPos.column];
-        field.removeVisitor({id: id});
+        field.removeVisitor({ id: id });
         characters = characters.filter((x) => x.id !== id);
     };
 
     observable.move = ({ id, direction }) => {
-        movesStack.push({ id, direction });
+        if (id === 'qbert') {
+            makeMove({ id, direction });
+        } else {
+            movesStack.push({ id, direction });
+        }
     };
 
     return observable;

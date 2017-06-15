@@ -2,6 +2,8 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
     var id = 'qbert';
     var type = 'qbert';
     var startingPos = null;
+    var hopSound = new Audio('http://www.basementarcade.com/arcade/sounds/qbert/Hop.wav');
+    var deathSound = new Audio('http://www.basementarcade.com/arcade/sounds/CCSOUNDS/OUCH.WAV');
 
     var updateViewPosition = () => {
         var { row, column } = $scope.position;
@@ -46,13 +48,15 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
             }
             case GameBoard.actions.animationEnd: {
                 $scope.position = payload.position;
+                hopSound.play();
                 updateViewPosition();
                 $timeout(() => $scope.isJumping = false, 500);
                 break;
             }
             case GameBoard.actions.qbertKilled: {
                 $scope.position = payload.position;
-                $scope.showSpeechBubble = true;                
+                $scope.showSpeechBubble = true;
+                deathSound.play();         
                 $timeout(() => {
                     $scope.showSpeechBubble = false;
                     updateViewPosition();

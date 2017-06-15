@@ -18,7 +18,7 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
             stepsToTarget: 1
         },
         {
-            addMonsterAfterSteps: 3,
+            addMonsterAfterSteps: 5,
             addCoilyAfterSteps: 10,
             stepsToTarget: 1
         },
@@ -87,7 +87,7 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
             case GameBoard.actions.qbertKilled: {
                 if (lives > 0) {
                     lives--;
-                    observable.next({ action: actions.qbertKilled, payload: { lives } });
+                    observable.next({ action: actions.qbertKilled, payload: { id: 'qbert', lives } });
                 } else {
                     $timeout(() => {
                         $state.go('end', { effect: 'failure' })
@@ -107,13 +107,14 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
 
     var addCharacter = () => {
         var levelCfg = levels[level - 1];
-        if (stepsMade % levelCfg.addMonsterAfterSteps !== 0) {
-            return;
-        }
 
         if (stepsMade === levelCfg.addCoilyAfterSteps) {
             let type = 'coily'
             observable.next({ action: actions.addCharacter, payload: { type } });
+            return;
+        }
+
+        if (stepsMade % levelCfg.addMonsterAfterSteps !== 0) {
             return;
         }
 
