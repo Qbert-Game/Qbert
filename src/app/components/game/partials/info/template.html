@@ -24,10 +24,11 @@
             <div flex></div>
             <div>{{points}}</div>
         </div>
-        <div layout="row" style="width: 100%;">
+        <div layout="row" layout-align="center center" style="width: 100%;">
             <div>Lives:</div>
             <div flex></div>
-            <div>{{lives}}</div>
+            <img ng-repeat="live in getArrayNumber(lives) track by $index" ng-src="assets/images/qbert.png" height="20" style="padding: 0 5px">
         </div>
     </div>
+</div>
 </div>
