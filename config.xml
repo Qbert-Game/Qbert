@@ -24,4 +24,5 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <engine name="android" spec="~6.1.2" />
+    <preference name="Orientation" value="portrait" />
 </widget>
