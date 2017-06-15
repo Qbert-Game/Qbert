@@ -23,23 +23,54 @@ export default class Field {
             this.newQbertVisit();
         }
 
-        setTimeout(() => {
-            var qbert = this.visitors.filter(v => v.type === 'qbert')[0];
-            var monster = this.visitors.filter(v => v.type !== 'qbert')[0];
+        var monsters = this.visitors.filter(v => v.type !== 'qbert');
+        var fieldHasQbert = this.visitors.filter(v => v.type === 'qbert')[0];
 
-            if (qbert && monster) {
-                if (monster.type === 'sam') {
-                    this.onMonsterKilledCallback(monster.id, this);
-                    this.removeVisitor({ id: monster.id });
-                } else {
-                    this.onQbertKilledCallback();
+        var killMonster = () => {
+            this.onMonsterKilledCallback(id, this);
+            this.removeVisitor({ id });
+        }
+
+        setTimeout(() => {
+            switch (type) {
+                case 'qbert': {
+                    for (let monster of monsters) {
+                        if (monster.type === 'sam') {
+                            this.onMonsterKilledCallback(monster.id, this);
+                            this.removeVisitor({ id: monster.id });
+                        } else {
+                            this.onQbertKilledCallback();
+                        }
+                    }
+                    break;
                 }
-            } else if (monster) {
-                if (monster.type == 'sam') {
+                case 'sam': {
                     this.revertColor();
-                } if ((monster.type == 'sam' || monster.type == 'ball') && this.coordinates.row === 6) {
-                    this.onMonsterKilledCallback(monster.id, this);
-                    this.removeVisitor({ id: monster.id });
+
+                    if (this.coordinates.row === 6) {
+                        killMonster();
+                    }
+
+                    if (fieldHasQbert) {
+                        this.onMonsterKilledCallback(id, this);
+                        this.removeVisitor({ id });
+                    }
+                    break;
+                }
+                case 'ball': {
+                    if (this.coordinates.row === 6) {
+                        killMonster();
+                    }
+
+                    if (fieldHasQbert) {
+                        this.onQbertKilledCallback();
+                    }
+                    break;
+                }
+                case 'coily': {
+                    if (fieldHasQbert) {
+                        this.onQbertKilledCallback();
+                    }
                 }
             }
         }, 100);
