@@ -9,46 +9,14 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
         addCharacter: 'ADD_CHARACTER'
     };
 
-    var level, points, lives, stepsMade;
+    var points = 0;
 
-    var levels = [
-        {
-            addMonsterAfterSteps: 5,
-            addCoilyAfterSteps: 20,
-            stepsToTarget: 1
-        },
-        {
-            addMonsterAfterSteps: 5,
-            addCoilyAfterSteps: 10,
-            stepsToTarget: 1
-        },
-        {
-            addMonsterAfterSteps: 5,
-            addCoilyAfterSteps: 20,
-            stepsToTarget: 2
-        },
-        {
-            addMonsterAfterSteps: 3,
-            addCoilyAfterSteps: 10,
-            stepsToTarget: 2
-        },
-        {
-            addMonsterAfterSteps: 5,
-            addCoilyAfterSteps: 20,
-            stepsToTarget: 3
-        },
-        {
-            addMonsterAfterSteps: 3,
-            addCoilyAfterSteps: 10,
-            stepsToTarget: 3
-        }
-    ];
+    var level, lives, stepsMade, levelCfg;
 
     observable.actions = actions;
 
     observable.init = () => {
         level = 0;
-        points = 0;
         lives = 3;
         stepsMade = 0;
     };
@@ -57,8 +25,10 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
         observable.init();
 
         level = level_;
+        levelCfg = App.defaults.getLevelCfg(level);
 
-        GameBoard.start(level);
+        var stepsToTarget = levelCfg.stepsToTarget;
+        GameBoard.start(stepsToTarget);
         observable.next({ action: actions.levelStarted, payload: { level } });
     }
 
@@ -67,7 +37,7 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
 
         switch (action) {
             case GameBoard.actions.levelCompleted: {
-                if (level === levels.length) {
+                if (level === App.defaults.levels.length) {
                     $state.go('end', { effect: 'victory' });
                 }
 
@@ -106,8 +76,6 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
     });
 
     var addCharacter = () => {
-        var levelCfg = levels[level - 1];
-
         if (stepsMade === levelCfg.addCoilyAfterSteps) {
             let type = 'coily'
             observable.next({ action: actions.addCharacter, payload: { type } });

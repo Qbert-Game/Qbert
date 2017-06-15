@@ -11,7 +11,8 @@ export default function ($scope, Game) {
             case Game.actions.levelStarted: {
                 let { level } = payload;
                 $scope.level = level;
-                $scope.color = App.defaults.fieldColors[level];
+                let stepsToTarget = App.defaults.getLevelCfg(level).stepsToTarget;
+                $scope.color = App.defaults.fieldColors[stepsToTarget];
                 break;
             }
             case Game.actions.pointsAdded: 
