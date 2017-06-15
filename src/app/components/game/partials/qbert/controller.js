@@ -2,8 +2,8 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
     var id = 'qbert';
     var type = 'qbert';
     var startingPos = null;
-    var hopSound = new Audio('http://www.basementarcade.com/arcade/sounds/qbert/Hop.wav');
-    var deathSound = new Audio('http://www.basementarcade.com/arcade/sounds/CCSOUNDS/OUCH.WAV');
+    var hopSound = new Audio('assets/audio/hop.wav');
+    var deathSound = new Audio('assets/audio/ouch.wav');
 
     var updateViewPosition = () => {
         var { row, column } = $scope.position;

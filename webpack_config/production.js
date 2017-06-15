@@ -25,6 +25,8 @@ var local = {
             from: './src/assets/images', to: '../www/assets/images'
         }, {
             from: './src/assets/fonts', to: '../www/assets/fonts'
+        }, {
+            from: './src/assets/audio', to: '../www/assets/audio'
         }]),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'commons',
