@@ -2,8 +2,6 @@ export default function ($scope, Game) {
     $scope.points = 0;
     $scope.lives = 3;
 
-    $scope.getArrayNumber = (n) => new Array(n);
-
     Game.subscribe(data => {
         var { action, payload } = data;
 
