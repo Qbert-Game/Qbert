@@ -15,6 +15,10 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
     }
 
     function move() {
+        var transformProbability = 0.5;
+        if(!$scope.isTransformed && Math.random() > 1 - transformProbability)
+            transform();
+
         if($scope.isTransformed && !(hostile = !hostile))
             return;
         var possibleMoves = MonsterUtils.getPossibleMonsterMoves(id, moves);
