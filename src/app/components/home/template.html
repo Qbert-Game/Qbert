@@ -1,5 +1,8 @@
-<div layout="column" layout-align="center center" layout-fill>
+<div layout="column" layout-align="center center" layout-fill style="//background: #e1e1e1;">
     <img src="assets/images/qbert.png" height="200">
     <h1 class="md-display-1">Q*bert</h1>
-    <md-button class="md-raised md-primary" ui-sref="game">Play</md-button>
+    <md-button class="md-raised md-primary" ng-click="play()">Play</md-button>
+    <md-checkbox class="md-primary sound-enabled" ng-model="soundEnabled">
+        Sound
+    </md-checkbox>
 </div>

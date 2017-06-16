@@ -1,4 +1,4 @@
-export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
+export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game, SoundEnabled) {
     var id = 'qbert';
     var type = 'qbert';
     var startingPos = null;
@@ -13,9 +13,9 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
             $scope.top = position.top;
             $scope.left = position.left;
 
-            if(!startingPos && $scope.top)
-                startingPos = {top: $scope.top, left: $scope.left};
-            if(startingPos && startingPos.top > $scope.top){
+            if (!startingPos && $scope.top)
+                startingPos = { top: $scope.top, left: $scope.left };
+            if (startingPos && startingPos.top > $scope.top) {
                 $scope.top = startingPos.top;
                 $scope.left = startingPos.left;
             }
@@ -48,7 +48,11 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
             }
             case GameBoard.actions.animationEnd: {
                 $scope.position = payload.position;
-                hopSound.play();
+
+                if (SoundEnabled.get()) {
+                    hopSound.play();
+                }
+
                 updateViewPosition();
                 $timeout(() => $scope.isJumping = false, 500);
                 break;
@@ -56,7 +60,11 @@ export default function ($scope, $rootScope, $timeout, Timer, GameBoard, Game) {
             case GameBoard.actions.qbertKilled: {
                 $scope.position = payload.position;
                 $scope.showSpeechBubble = true;
-                deathSound.play();         
+
+                if (SoundEnabled.get()) {
+                    deathSound.play();
+                }
+
                 $timeout(() => {
                     $scope.showSpeechBubble = false;
                     updateViewPosition();
