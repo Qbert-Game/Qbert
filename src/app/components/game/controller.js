@@ -1,4 +1,6 @@
 export default function ($scope, Timer, GameBoard, Game, $timeout) {
+    var newLevelSound = new Audio('assets/audio/game-start.wav');
+    
     // wait for all partials to be loaded
     $timeout(() => {
         Game.startLevel(1);
@@ -24,6 +26,7 @@ export default function ($scope, Timer, GameBoard, Game, $timeout) {
                 initMonstersContainer();
                 $scope.gameBoard = GameBoard.get();
                 $scope.qbert = GameBoard.qbert;
+                newLevelSound.play();
                 break;
             }
             case Game.actions.addCharacter: {
