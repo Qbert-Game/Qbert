@@ -2,7 +2,10 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
     var id = 'coily' + $scope.$id;
     var type = 'coily';
     var moves = getMoves();
-    var hostile = false;
+    var hostile = true;
+    var waitingRounds = 0;
+    var moveCounter = 0;
+    
 
     var updateViewPosition = () => {
         var { row, column } = $scope.position;
@@ -15,7 +18,8 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
     }
 
     function move() {
-        if($scope.isTransformed && !(hostile = !hostile))
+        hostile = moveCounter++ % (waitingRounds + 1) === 0;
+        if($scope.isTransformed && !hostile )
             return;
         var possibleMoves = MonsterUtils.getPossibleMonsterMoves(id, moves);
         var qbertPos = GameBoard.getQbert().position;
