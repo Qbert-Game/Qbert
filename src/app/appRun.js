@@ -6,6 +6,8 @@ export default function ($rootScope, $state) {
         downLeft: 'DOWN_LEFT'
     };
 
+    $rootScope.rowCount = 5;
+
     document.addEventListener('deviceready', () => {
         document.addEventListener('backbutton', () => {
             switch ($state.current.name) {

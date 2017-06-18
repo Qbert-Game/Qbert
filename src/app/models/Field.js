@@ -1,7 +1,7 @@
 import uuid from 'utils/uuid';
 
 export default class Field {
-    constructor({ row, column, stepsToTarget, $q, $rootScope }) {
+    constructor({ row, column, stepsToTarget, $q, $rootScope}) {
         this.id = uuid();
 
         this.colors = App.defaults.fieldColors;
@@ -47,7 +47,7 @@ export default class Field {
                 case 'sam': {
                     this.revertColor();
 
-                    if (this.coordinates.row === 6) {
+                    if (this.coordinates.row === this.$rootScope.rowCount - 1) {
                         killMonster();
                     }
 
@@ -58,7 +58,7 @@ export default class Field {
                     break;
                 }
                 case 'ball': {
-                    if (this.coordinates.row === 6) {
+                    if (this.coordinates.row === this.$rootScope.rowCount - 1) {
                         killMonster();
                     }
 

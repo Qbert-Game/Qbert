@@ -3,7 +3,8 @@ import Field from 'models/Field';
 export default function ($rootScope, Timer, Observable, $q, $timeout) {
     var observable = new Observable();
     var gameBoard, characters, movesStack;
-    var reached = 0, fieldsNumber = 28;
+    var ROW_COUNT = $rootScope.rowCount;
+    var reached = 0, fieldsNumber = (1 + ROW_COUNT) * ROW_COUNT / 2;
 
     var actions = {
         animationStart: 'ANIMATION_START',
@@ -19,7 +20,7 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
     var generateGameBoard = (stepsToTarget) => {
         var gameBoard = [];
 
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < ROW_COUNT; i++) {
             var row = [];
 
             for (let j = 0; j < i + 1; j++) {
@@ -144,7 +145,7 @@ export default function ($rootScope, Timer, Observable, $q, $timeout) {
         characters = [];
         movesStack = [];
         reached = 0;
-        fieldsNumber = 28;
+        fieldsNumber = (1 + ROW_COUNT) * ROW_COUNT / 2;
     };
 
     observable.actions = actions;

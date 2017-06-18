@@ -60,7 +60,7 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
                 updateViewPosition();
                 $timeout(() => {
                     $scope.isJumping = false;
-                    if (!$scope.isTransformed && $scope.position.row === 6)
+                    if (!$scope.isTransformed && $scope.position.row === $rootScope.rowCount - 1)
                         transform();
                 }, 500);
                 break;

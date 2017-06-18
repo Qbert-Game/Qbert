@@ -62,7 +62,7 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
             case GameBoard.actions.monsterDying: {
                 unregister();
                 
-                if ($scope.position.row !== 6) {
+                if ($scope.position.row !== $rootScope.rowCount - 1) {
                     dieInPlace();
                 }
                 else
