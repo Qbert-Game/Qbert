@@ -13,6 +13,7 @@ export default function ($scope, Game) {
                 $scope.level = level;
                 let stepsToTarget = App.defaults.getLevelCfg(level).stepsToTarget;
                 $scope.color = App.defaults.fieldColors[stepsToTarget];
+                $scope.lives = 3;
                 break;
             }
             case Game.actions.pointsAdded: 
