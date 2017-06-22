@@ -3,7 +3,7 @@ export default async function ($scope, $rootScope, $timeout, GameBoard, Game, Ti
     var type = 'coily';
     var moves = getMoves();
     var hostile = true;
-    var waitingRounds = 0;
+    var waitingRounds = 0; // min = 0, default = 1, bigger value = less aggression
     var moveCounter = 0;
     
 
