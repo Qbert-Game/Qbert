@@ -8,7 +8,7 @@
     <div layout="column" layout-align="center center" ng-if="gameEffect === 'failure'">
         <img src="assets/images/failure.png" height="200">
         <h1 class="md-headline">You lose!</h1>
-        <h3 class="md-title">Don't worry</h3>
+        <h3 class="md-title">Your score: {{totalPoints()}}</h3>
     </div>
 
     <md-button class="md-raised md-primary" ng-click="playAgain()" style="margin-top: 30px;">Play again</md-button>

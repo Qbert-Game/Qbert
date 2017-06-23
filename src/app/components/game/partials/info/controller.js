@@ -1,4 +1,4 @@
-export default function ($scope, Game) {
+export default function ($scope, $rootScope, Game) {
     $scope.points = 0;
     $scope.lives = 3;
 
@@ -20,6 +20,7 @@ export default function ($scope, Game) {
             case Game.actions.pointsSubtracted: {
                 let { points } = payload;
                 $scope.points = points;
+                $rootScope.totalScore = $scope.points;
                 break;
             }
             case Game.actions.qbertKilled: {
