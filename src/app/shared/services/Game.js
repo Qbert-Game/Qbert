@@ -24,6 +24,10 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
     observable.startLevel = (level_) => {
         observable.init();
 
+        if (level_ === 1) {
+            points = 0;
+        }
+
         level = level_;
         levelCfg = App.defaults.getLevelCfg(level);
 
