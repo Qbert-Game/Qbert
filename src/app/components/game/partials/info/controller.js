@@ -27,6 +27,10 @@ export default function ($scope, Game) {
                 $scope.lives = lives;
                 break;
             }
+            case Game.actions.timeLeftChanged: {
+                let { timeLeft } = payload;
+                $scope.timeLeft = timeLeft;
+            }
         }
     });
 }

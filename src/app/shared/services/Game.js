@@ -6,25 +6,43 @@ export default function (Observable, GameBoard, $state, $timeout, Timer) {
         pointsAdded: 'POINTS_ADDED',
         pointsSubtracted: 'POINTS_SUBTRACTED',
         qbertKilled: 'QBERT_KILLED_G',
-        addCharacter: 'ADD_CHARACTER'
+        addCharacter: 'ADD_CHARACTER',
+        timeLeftChanged: 'TIME_LEFT_CHANGED'
     };
 
     var points = 0;
 
     var level, lives, stepsMade, levelCfg;
 
+    var TIME_TO_FINISH = 60;
+    var timeLeft = TIME_TO_FINISH;
+
     observable.actions = actions;
 
-    observable.init = () => {
-        level = 0;
+    observable.init = (level_) => {
+        level = level_;
         lives = 3;
         stepsMade = 0;
+
+        var timeDec = () => {
+            $timeout(() => {
+                if(--timeLeft === 0)
+                    $state.go('end', { effect: 'failure' })
+                else{
+                    observable.next({ action: actions.timeLeftChanged, payload: { timeLeft } });
+                    timeDec();
+                }
+            }, 1000)
+        }
+
+        if(level === 1)
+            $timeout(timeDec, 0);
     };
 
     observable.startLevel = (level_) => {
-        observable.init();
+        observable.init(level_);
+        timeLeft = TIME_TO_FINISH;
 
-        level = level_;
         levelCfg = App.defaults.getLevelCfg(level);
 
         var stepsToTarget = levelCfg.stepsToTarget;

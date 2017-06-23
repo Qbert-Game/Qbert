@@ -29,6 +29,11 @@
             <div flex></div>
             <img ng-repeat="live in getArrayNumber(lives) track by $index" ng-src="assets/images/qbert.png" height="20" style="padding: 0 2px">
         </div>
+        <div layout="row" style="width: 100%; margin-bottom: 15px;">
+            <div style="padding-right: 5px;">Time:</div>
+            <div flex></div>
+            <div>{{timeLeft}}</div>
+        </div>
     </div>
 </div>
 </div>
